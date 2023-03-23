@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class UIManager : MonoBehaviour
     int m_framesCount = 0;
     public Text timerText;
     public Text gameResult;
+
+    [SerializeField] List<GameObject> dontDestroyUIList;
 
     private void Start()
     {
@@ -37,6 +40,17 @@ public class UIManager : MonoBehaviour
         {
             UpdateGameResult();
         }    
+    }
+
+    public void Awake()
+    {
+        foreach(var uiElement in dontDestroyUIList)
+        {
+            if (uiElement)
+            {
+                DontDestroyOnLoad(uiElement);
+            }
+        }
     }
 
     private void UpdateTimer()
@@ -87,5 +101,21 @@ public class UIManager : MonoBehaviour
     public void OnAddEscaperClicked()
     {
         //GameManager.Get().AddEscaper();
+    }
+
+    public void OnDropDownChanged(Dropdown dropDown)
+    {
+        switch (dropDown.value)
+        {
+            case 0:
+                SceneManager.LoadScene("MainScene");
+                break;
+            case 1:
+                SceneManager.LoadScene("Scene2");
+                break;
+            default:
+                // code block
+                break;
+        }
     }
 }
