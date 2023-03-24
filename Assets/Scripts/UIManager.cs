@@ -16,15 +16,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        TimeSpan time = TimeSpan.FromSeconds(currentTime);
-        if (timerText)
-        {
-            timerText.text = time.ToString(@"mm\:ss\:fff");
-        }
-        if(gameResult)
-        {
-            gameResult.text = "";
-        }
+        ResetUI();
     }
 
     private void Update()
@@ -96,8 +88,27 @@ public class UIManager : MonoBehaviour
     public void OnStartButtonClicked()
     {
         GameManager.Get().StartGame();
+        ResetUI();
     }
 
+    private void ResetUI()
+    {
+        currentTime = 0.0f;
+        m_framesCount = 0;
+
+        TimeSpan time = TimeSpan.FromSeconds(currentTime);
+        if (timerText)
+        {
+            timerText.text = time.ToString(@"mm\:ss\:fff");
+        }
+
+        if (gameResult)
+        {
+            gameResult.text = "";
+        }
+
+    }
+    
     public void OnAddEscaperClicked()
     {
         //GameManager.Get().AddEscaper();
@@ -117,5 +128,6 @@ public class UIManager : MonoBehaviour
                 // code block
                 break;
         }
+        ResetUI();
     }
 }
