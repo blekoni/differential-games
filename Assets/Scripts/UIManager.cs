@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,17 +12,11 @@ public class UIManager : MonoBehaviour
     public Text timerText;
     public Text gameResult;
 
+    [SerializeField] List<GameObject> dontDestroyUIList;
+
     private void Start()
     {
-        TimeSpan time = TimeSpan.FromSeconds(currentTime);
-        if (timerText)
-        {
-            timerText.text = time.ToString(@"mm\:ss\:fff");
-        }
-        if(gameResult)
-        {
-            gameResult.text = "";
-        }
+        ResetUI();
     }
 
     private void Update()
@@ -37,6 +32,17 @@ public class UIManager : MonoBehaviour
         {
             UpdateGameResult();
         }    
+    }
+
+    public void Awake()
+    {
+        foreach(var uiElement in dontDestroyUIList)
+        {
+            if (uiElement)
+            {
+                DontDestroyOnLoad(uiElement);
+            }
+        }
     }
 
     private void UpdateTimer()
@@ -82,10 +88,46 @@ public class UIManager : MonoBehaviour
     public void OnStartButtonClicked()
     {
         GameManager.Get().StartGame();
+        ResetUI();
     }
 
+    private void ResetUI()
+    {
+        currentTime = 0.0f;
+        m_framesCount = 0;
+
+        TimeSpan time = TimeSpan.FromSeconds(currentTime);
+        if (timerText)
+        {
+            timerText.text = time.ToString(@"mm\:ss\:fff");
+        }
+
+        if (gameResult)
+        {
+            gameResult.text = "";
+        }
+
+    }
+    
     public void OnAddEscaperClicked()
     {
         //GameManager.Get().AddEscaper();
+    }
+
+    public void OnDropDownChanged(Dropdown dropDown)
+    {
+        switch (dropDown.value)
+        {
+            case 0:
+                SceneManager.LoadScene("MainScene");
+                break;
+            case 1:
+                SceneManager.LoadScene("Scene2");
+                break;
+            default:
+                // code block
+                break;
+        }
+        ResetUI();
     }
 }
