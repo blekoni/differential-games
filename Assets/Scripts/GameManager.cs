@@ -33,7 +33,37 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         DebugUtil.DrawPolyline(m_gameAreaPolygon, Color.yellow, 1000);
-        
+
+        var pursuers = GameObject.FindGameObjectsWithTag("Pursuer");
+        foreach (var pursuer in pursuers)
+        {
+            if (!pursuer)
+            {
+                continue;
+            }
+
+            var component = pursuer.GetComponent("Pursuer") as Pursuer;
+            if (component)
+            {
+                m_pursuers.Add(component);
+            }
+        }
+
+        var escapers = GameObject.FindGameObjectsWithTag("Escaper");
+        foreach (var escaper in escapers)
+        {
+            if (!escaper)
+            {
+                continue;
+            }
+
+            var component = escaper.GetComponent("Escaper") as Escaper;
+            if (component)
+            {
+                m_escapers.Add(component);
+            }
+        }
+
         m_instance = this;
     }
 
@@ -46,13 +76,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown("1"))
+        if(Input.GetKeyDown("q"))
         {
             m_mainCamera.SetActive(true);
             m_topCamera.SetActive(false);
         }
 
-        if(Input.GetKeyDown("2"))
+        if(Input.GetKeyDown("w"))
         {
             m_mainCamera.SetActive(false);
             m_topCamera.SetActive(true);
@@ -90,36 +120,6 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        var pursuers = GameObject.FindGameObjectsWithTag("Pursuer");
-        foreach(var pursuer in pursuers)
-        {
-            if (!pursuer)
-            {
-                continue;
-            }
-
-            var component = pursuer.GetComponent("Pursuer") as Pursuer;
-            if(component)
-            {
-                m_pursuers.Add(component);
-            }
-        }
-
-        var escapers = GameObject.FindGameObjectsWithTag("Escaper");
-        foreach (var escaper in escapers)
-        {
-            if (!escaper)
-            {
-                continue;
-            }
-
-            var component = escaper.GetComponent("Escaper") as Escaper;
-            if (component)
-            {
-                m_escapers.Add(component);
-            }
-        }
-
         MakeAllAlive();
         m_gameStatus = GameStatus.InProgress;
     }

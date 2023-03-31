@@ -43,7 +43,6 @@ public class Player : MonoBehaviour
             var moveVec = MathUtil.Vec2ToVec3(moveVec2d.normalized);
             RotateToDirection(moveVec);
             transform.position += moveVec * GetSpeed() * Time.deltaTime;
-            //Debug.Log(Time.deltaTime);
             AddPath(MathUtil.Vec3ToVec2(transform.position));
         }
         else if(GameManager.Get().GetGameStatus() == GameManager.GameStatus.Ended)
@@ -150,8 +149,6 @@ public class Player : MonoBehaviour
         var crossProduct = Vector3.Cross(m_moveDirection, moveVec).normalized;
 
         float sign = crossProduct.y > 0.0f ? 1.0f : -1.0f;
-        Debug.Log(angle);
-        //Vector3 yaxis = new Vector3(0.0f, 1.0f, 0.0f);
         transform.Rotate(crossProduct, angle);
 
         m_moveDirection = moveVec;
