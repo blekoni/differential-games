@@ -11,37 +11,55 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] Slider m_slider;
     [SerializeField] Dropdown m_dropdown;
 
-    [SerializeField] Player m_pursuer;
+    Player m_player;
+
+    public static PlayerUI m_instance;
+
     private void Start()
     {
-        m_pursuer = GetPursuer();
-        SetPlayerInfo();
     }
 
-    private void SetPlayerInfo()
+    private void Awake()
     {
-        var position = m_pursuer.transform.position;
-        m_positionInputX.text = position.x.ToString();
-        m_positionInputY.text = position.z.ToString();
-        m_slider.value = m_pursuer.GetSpeed();
+        m_instance = this;
     }
 
-    Player GetPursuer()
+    public static PlayerUI Get()
     {
-        var pursuers = GameManager.Get().GetPusuers();
+        return m_instance;
+    }
 
-        if (pursuers.Count == 0)
+    public void Show(GameObject obj)
+    {
+        var player = obj.GetComponent<Player>();
+        ShowPlayerInfo(player);
+        gameObject.SetActive(true);
+
+        m_player = player;
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+        m_player = null;
+    }
+
+    private void ShowPlayerInfo(Player player)
+    {
+        if(!player)
         {
-            return null;
+            return;
         }
 
-        return pursuers[0];
+        var position = player.transform.position;
+        m_positionInputX.text = position.x.ToString();
+        m_positionInputY.text = position.z.ToString();
+        m_slider.value = player.GetSpeed();
     }
 
     public void OnDropDownPursuerChanged(Dropdown dropDown)
     {
-        var pursuer = GetPursuer();
-        if (pursuer == null)
+        if (m_player == null)
         {
             return;
         }
@@ -73,10 +91,9 @@ public class PlayerUI : MonoBehaviour
             return;
         }
 
-        var pursuer = GetPursuer();
-        if (pursuer != null)
+        if (m_player != null)
         {
-            pursuer.transform.position = new Vector3(pursuer.transform.position.x, pursuer.transform.position.y, (float)toDouble);
+            m_player.transform.position = new Vector3(m_player.transform.position.x, m_player.transform.position.y, (float)toDouble);
         }
     }
 
@@ -93,21 +110,18 @@ public class PlayerUI : MonoBehaviour
             return;
         }
 
-        var pursuer = GetPursuer();
-        if (pursuer != null)
+        if (m_player != null)
         {
-            pursuer.transform.position = new Vector3((float)toDouble, pursuer.transform.position.y, pursuer.transform.position.z);
+            m_player.transform.position = new Vector3((float)toDouble, m_player.transform.position.y, m_player.transform.position.z);
         }
     }
 
     public void OnSpeedChange(Slider slider)
     {
-        var pursuer = GetPursuer();
-        if (pursuer != null)
+        if (m_player != null)
         {
-            pursuer.SetSpeed(slider.value);
+            m_player.SetSpeed(slider.value);
         }
     }
-
 
 }
