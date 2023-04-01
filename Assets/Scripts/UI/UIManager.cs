@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         ResetUI();
+        LoadUI();
     }
 
     private void Update()
@@ -108,6 +109,11 @@ public class UIManager : MonoBehaviour
         }
 
     }
+
+    private void LoadUI()
+    {
+        var pursuers = GameManager.Get().GetPusuers();
+    }
     
     public void OnAddEscaperClicked()
     {
@@ -131,55 +137,6 @@ public class UIManager : MonoBehaviour
         ResetUI();
     }
 
-    public void OnPursuerSpeedChange(Slider slider)
-    {
-        var pursuer = GetPursuer();
-        if (pursuer != null)
-        {
-            pursuer.SetSpeed(slider.value);
-        }
-    }
-
-    public void OnPursuerPositionXChange(InputField fieldX)
-    {
-        var str = fieldX.text;
-        if(str.Length == 0)
-        {
-            return;
-        }
-        var toDouble = Convert.ToDouble(str);
-        if(toDouble == null)
-        {
-            return;
-        }
-
-        var pursuer = GetPursuer();
-        if (pursuer != null)
-        {
-            pursuer.transform.position = new Vector3((float)toDouble, pursuer.transform.position.y, pursuer.transform.position.z);
-        }
-    }
-
-    public void OnPursuerPositionYChange(InputField fieldX)
-    {
-        var str = fieldX.text;
-        if (str.Length == 0)
-        {
-            return;
-        }
-        var toDouble = Convert.ToDouble(str);
-        if (toDouble == null)
-        {
-            return;
-        }
-
-        var pursuer = GetPursuer();
-        if (pursuer != null)
-        {
-            pursuer.transform.position = new Vector3(pursuer.transform.position.x, pursuer.transform.position.y, (float)toDouble);
-        }
-    }
-
     Player GetPursuer()
     {
         var pursuers = GameManager.Get().GetPusuers();
@@ -191,4 +148,5 @@ public class UIManager : MonoBehaviour
 
         return pursuers[0];
     }
+
 }
