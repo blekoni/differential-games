@@ -29,16 +29,16 @@ public class Player : MonoBehaviour
         {
             var moveVec2d = m_behaviorHelper.GetNextStepDirection(GetPosition(), GetDirection());
 
-            bool wind = false;
-            if (wind)
-            {
-                var windVec = new Vector2(0.02f, 0.0f);
+            //bool wind = false;
+            //if (wind)
+            //{
+            //    var windVec = new Vector2(0.02f, 0.0f);
 
-                if (m_bFlag)
-                    moveVec2d = moveVec2d - windVec;
-                else
-                    moveVec2d = moveVec2d + windVec;
-            }
+            //    if (m_bFlag)
+            //        moveVec2d = moveVec2d - windVec;
+            //    else
+            //        moveVec2d = moveVec2d + windVec;
+            //}
 
             var moveVec = MathUtil.Vec2ToVec3(moveVec2d.normalized);
             RotateToDirection(moveVec);
@@ -208,5 +208,15 @@ public class Player : MonoBehaviour
         }
 
         return distance;
+    }
+
+    virtual public int GetBehavior()
+    {
+        return 0;
+    }
+
+    virtual public void SetBehavior(int bevaior)
+    {
+        return;
     }
 }

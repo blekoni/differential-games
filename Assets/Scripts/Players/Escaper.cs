@@ -62,4 +62,24 @@ public class Escaper : Player
             Die();
         }
     }
+
+    public override int GetBehavior()
+    {
+        return (int)m_behaviour;
+    }
+
+    public override void SetBehavior(int behavior)
+    {
+        if (behavior < 0)
+        {
+            return;
+        }
+
+        if (behavior > 2)
+        {
+            return;
+        }
+
+        m_behaviour = (Behaviour)behavior;
+    }
 }

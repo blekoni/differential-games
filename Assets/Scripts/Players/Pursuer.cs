@@ -56,4 +56,24 @@ public class Pursuer : Player
             Die();
         }
     }
+
+    public override int GetBehavior() 
+    {
+        return (int)m_behaviour;
+    }
+
+    public override void SetBehavior(int behavior)
+    {
+        if(behavior < 0)
+        {
+            return;
+        }
+
+        if(behavior > 1)
+        {
+            return;
+        }
+
+        m_behaviour = (Behaviour)behavior;
+    }
 }

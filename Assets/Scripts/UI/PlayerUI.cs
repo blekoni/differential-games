@@ -10,6 +10,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] InputField m_positionInputY;
     [SerializeField] Slider m_slider;
     [SerializeField] Dropdown m_dropdown;
+    [SerializeField] Text m_playerName;
 
     Player m_player;
 
@@ -46,36 +47,54 @@ public class PlayerUI : MonoBehaviour
 
     private void ShowPlayerInfo(Player player)
     {
-        if(!player)
+        if (!player)
         {
             return;
         }
+
+        m_playerName.text = player.tag;
 
         var position = player.transform.position;
         m_positionInputX.text = position.x.ToString();
         m_positionInputY.text = position.z.ToString();
         m_slider.value = player.GetSpeed();
+
+        UpdateBehaviour(player);
     }
 
-    public void OnDropDownPursuerChanged(Dropdown dropDown)
+    private void UpdateBehaviour(Player player)
     {
-        if (m_player == null)
+        if (!player || !m_dropdown)
         {
             return;
         }
 
-        switch (dropDown.value)
+        m_dropdown.ClearOptions();
+
+        if (player.CompareTag("Pursuer"))
         {
-            case 0:
-                //SceneManager.LoadScene("MainScene");
-                break;
-            case 1:
-                //SceneManager.LoadScene("Scene2");
-                break;
-            default:
-                // code block
-                break;
+            List<string> options = new List<string> { "Simple pursuit", "Parallel pursuit" };
+            m_dropdown.AddOptions(options);
+
         }
+        else
+        {
+            List<string> options = new List<string> { "Simple escape", "Static vector", "Escape from area" };
+            m_dropdown.AddOptions(options);
+        }
+
+        m_dropdown.SetValueWithoutNotify(player.GetBehavior());
+    }
+
+    public void OnDropDownChanged(Dropdown dropDown)
+    {
+        if (!m_player || !dropDown)
+        {
+            return;
+        }
+
+        Debug.Log(dropDown.value);
+        m_player.SetBehavior(dropDown.value);
     }
 
     public void OnPositionYChange(InputField fieldX)

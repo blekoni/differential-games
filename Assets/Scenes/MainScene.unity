@@ -885,7 +885,7 @@ MonoBehaviour:
   m_isAlive: 0
   m_isVisible: 1
   m_shouldAliveOnCollision: 1
-  m_behaviour: 0
+  m_behaviour: 1
 --- !u!136 &1116176620
 CapsuleCollider:
   m_ObjectHideFlags: 0
