@@ -210,12 +210,17 @@ public class Player : MonoBehaviour
         return distance;
     }
 
-    virtual public int GetBehavior()
+    public Behavior GetBehavior()
     {
-        return 0;
+        return m_behaviorHelper;
     }
 
-    virtual public void SetBehavior(int bevaior)
+    virtual public Behavior.BehaviorType GetBehaviorType()
+    {
+        return m_behaviorHelper.GetBehaviorType();
+    }
+
+    virtual public void SetBehavior(Behavior.BehaviorType behaviorType)
     {
         return;
     }

@@ -5,27 +5,10 @@ using UnityEngine;
 
 public class Pursuer : Player
 {
-    enum Behaviour
-    {
-        SimplePursuit,
-        ParallelPursuit
-    }
-
-    [SerializeField] Behaviour m_behaviour = Behaviour.SimplePursuit;
-
-    bool m_bflag = false;
-
     // Start is called before the first frame update
     void Start()
     {
-        if(m_behaviour == Behaviour.SimplePursuit)
-        {
-            m_behaviorHelper = new SimplePursuit();
-        }
-        else if (m_behaviour == Behaviour.ParallelPursuit)
-        {
-            m_behaviorHelper = new ParallelPursuit();
-        }
+        SetBehavior(Behavior.BehaviorType.SimplePursuit);
 
         SetIsVisible(IsVisible());
     }
@@ -57,23 +40,15 @@ public class Pursuer : Player
         }
     }
 
-    public override int GetBehavior() 
+    public override void SetBehavior(Behavior.BehaviorType behaviorType)
     {
-        return (int)m_behaviour;
-    }
-
-    public override void SetBehavior(int behavior)
-    {
-        if(behavior < 0)
+        if (behaviorType == Behavior.BehaviorType.SimplePursuit)
         {
-            return;
+            m_behaviorHelper = new SimplePursuit();
         }
-
-        if(behavior > 1)
+        else if (behaviorType == Behavior.BehaviorType.ParallelPursuit)
         {
-            return;
+            m_behaviorHelper = new ParallelPursuit();
         }
-
-        m_behaviour = (Behaviour)behavior;
     }
 }

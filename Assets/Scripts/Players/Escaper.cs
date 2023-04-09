@@ -4,35 +4,10 @@ using UnityEngine;
 
 public class Escaper : Player
 {
-    enum Behaviour
-    {
-        EscapeFromClosestPursuer,
-        EscapeInStaticDirection,
-        EscapeFromArea
-    }
-
-    [SerializeField] Behaviour m_behaviour = Behaviour.EscapeFromClosestPursuer;
-    [SerializeField] Vector2 m_staticDirection = new Vector2(1.0f,0.0f);
-
-    bool m_bflag = false;
-
     // Start is called before the first frame update
     void Start()
     {
-        if (m_behaviour == Behaviour.EscapeFromClosestPursuer)
-        {
-            m_behaviorHelper = new EscapeFromClosestPursuer();
-        }
-        else if(m_behaviour == Behaviour.EscapeFromArea)
-        {
-            m_behaviorHelper = new EscapeFromArea(MathUtil.Vec3ToVec2(transform.position));
-        }
-        else if(m_behaviour == Behaviour.EscapeInStaticDirection)
-        {
-            m_behaviorHelper = new EscapeInStaticDirection(m_staticDirection);
-        }
-
-        //m_moveDirection = MathUtil.Vec2ToVec3(m_behaviorHelper.GetNextStepDirection(GetPosition(), GetDirection()));
+        SetBehavior(Behavior.BehaviorType.EscapeFromClosestPursuer);
         SetIsVisible(IsVisible());
     }
 
@@ -63,23 +38,19 @@ public class Escaper : Player
         }
     }
 
-    public override int GetBehavior()
+    public override void SetBehavior(Behavior.BehaviorType behaviorType)
     {
-        return (int)m_behaviour;
-    }
-
-    public override void SetBehavior(int behavior)
-    {
-        if (behavior < 0)
+        if (behaviorType == Behavior.BehaviorType.EscapeFromClosestPursuer)
         {
-            return;
+            m_behaviorHelper = new EscapeFromClosestPursuer();
         }
-
-        if (behavior > 2)
+        else if (behaviorType == Behavior.BehaviorType.EscapeFromArea)
         {
-            return;
+            m_behaviorHelper = new EscapeFromArea(MathUtil.Vec3ToVec2(transform.position));
         }
-
-        m_behaviour = (Behaviour)behavior;
+        else if (behaviorType == Behavior.BehaviorType.EscapeInStaticDirection)
+        {
+            m_behaviorHelper = new EscapeInStaticDirection(new Vector2(1.0f, 0.0f));
+        }
     }
 }

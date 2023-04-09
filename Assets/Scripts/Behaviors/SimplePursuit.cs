@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class SimplePursuit : Behavior
 {
+    public SimplePursuit()
+    {
+        m_behaviorType = BehaviorType.SimplePursuit;
+    }
+
     public override Vector2 GetNextStepDirection(Vector2 currentPos, Vector2 currentDir)
     {
         Player closestEscaper = GetClosestEnemy(GameManager.PlayerRole.Escaper, currentPos, true);

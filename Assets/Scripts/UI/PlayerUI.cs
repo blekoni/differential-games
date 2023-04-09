@@ -12,6 +12,10 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] Dropdown m_dropdown;
     [SerializeField] Text m_playerName;
 
+    [SerializeField] Text m_additionalText;
+    [SerializeField] InputField m_additionalInputX;
+    [SerializeField] InputField m_additionalInputY;
+
     Player m_player;
 
     public static PlayerUI m_instance;
@@ -60,6 +64,7 @@ public class PlayerUI : MonoBehaviour
         m_slider.value = player.GetSpeed();
 
         UpdateBehaviour(player);
+        UpdateAdditional(player);
     }
 
     private void UpdateBehaviour(Player player)
@@ -71,19 +76,92 @@ public class PlayerUI : MonoBehaviour
 
         m_dropdown.ClearOptions();
 
+        Behavior.BehaviorType behaviorType = player.GetBehaviorType();
+
         if (player.CompareTag("Pursuer"))
         {
             List<string> options = new List<string> { "Simple pursuit", "Parallel pursuit" };
             m_dropdown.AddOptions(options);
 
+            if(behaviorType == Behavior.BehaviorType.SimplePursuit)
+            {
+                m_dropdown.SetValueWithoutNotify(0);
+            }
+            else if(behaviorType == Behavior.BehaviorType.ParallelPursuit)
+            {
+                m_dropdown.SetValueWithoutNotify(1);
+            }
+
         }
         else
         {
-            List<string> options = new List<string> { "Simple escape", "Static vector", "Escape from area" };
+            List<string> options = new List<string> { "Simple escape", "Static direction", "Escape from area" };
             m_dropdown.AddOptions(options);
+
+            if (behaviorType == Behavior.BehaviorType.EscapeFromClosestPursuer)
+            {
+                m_dropdown.SetValueWithoutNotify(0);
+            }
+            else if (behaviorType == Behavior.BehaviorType.EscapeInStaticDirection)
+            {
+                m_dropdown.SetValueWithoutNotify(1);
+            }
+            else if (behaviorType == Behavior.BehaviorType.EscapeFromArea)
+            {
+                m_dropdown.SetValueWithoutNotify(2);
+            }
+        }
+    }
+
+    private void UpdateAdditional(Player player)
+    {
+        if (!player || !m_additionalText || !m_additionalInputX || !m_additionalInputY)
+        {
+            return;
         }
 
-        m_dropdown.SetValueWithoutNotify(player.GetBehavior());
+        m_additionalText.text = "";
+        m_additionalInputX.gameObject.active = false;
+        m_additionalInputY.gameObject.active = false;
+
+        if (player.CompareTag("Escaper"))
+        {
+            if (player.GetBehaviorType() == Behavior.BehaviorType.EscapeInStaticDirection)
+            {
+                m_additionalText.text = "Direction:";
+                m_additionalInputX.gameObject.active = true;
+                m_additionalInputY.gameObject.active = true;
+
+                var escapeInStaticDir = GetEscapeInStaticDirection();
+                if (escapeInStaticDir != null)
+                {
+                    var dir = escapeInStaticDir.GetDirection();
+                    m_additionalInputX.text = dir.x.ToString();
+                    m_additionalInputY.text = dir.y.ToString();
+                }
+            }
+        }
+    }
+
+    private EscapeInStaticDirection GetEscapeInStaticDirection()
+    {
+        if(!m_player)
+        {
+            return null;
+        }
+
+        if(m_player.GetBehaviorType() != Behavior.BehaviorType.EscapeInStaticDirection)
+        {
+            return null;
+        }
+
+        var behavior = m_player.GetBehavior();
+        if (behavior == null)
+        {
+            return null;
+        }
+    
+        return (EscapeInStaticDirection)behavior;
     }
 
     public void OnDropDownChanged(Dropdown dropDown)
@@ -93,8 +171,35 @@ public class PlayerUI : MonoBehaviour
             return;
         }
 
-        Debug.Log(dropDown.value);
-        m_player.SetBehavior(dropDown.value);
+        if (m_player.CompareTag("Pursuer"))
+        {
+            if(dropDown.value == 0)
+            {
+                m_player.SetBehavior(Behavior.BehaviorType.SimplePursuit);
+            }
+            else if (dropDown.value == 1)
+            {
+                m_player.SetBehavior(Behavior.BehaviorType.ParallelPursuit);
+            }
+        }
+        else
+        {
+            if (dropDown.value == 0)
+            {
+                m_player.SetBehavior(Behavior.BehaviorType.EscapeFromClosestPursuer);
+            }
+            else if (dropDown.value == 1)
+            {
+                m_player.SetBehavior(Behavior.BehaviorType.EscapeInStaticDirection);
+            }
+            else if (dropDown.value == 2)
+            {
+                m_player.SetBehavior(Behavior.BehaviorType.EscapeFromArea);
+            }
+        }
+
+      
+        UpdateAdditional(m_player);
     }
 
     public void OnPositionYChange(InputField fieldX)
@@ -132,6 +237,46 @@ public class PlayerUI : MonoBehaviour
         if (m_player != null)
         {
             m_player.transform.position = new Vector3((float)toDouble, m_player.transform.position.y, m_player.transform.position.z);
+        }
+    }
+
+    public void OnAdditionalYChange(InputField fieldX)
+    {
+        var str = fieldX.text;
+        if (str.Length == 0)
+        {
+            return;
+        }
+        var toDouble = Convert.ToDouble(str);
+        if (toDouble == null)
+        {
+            return;
+        }
+
+        var escapeInStaticDir = GetEscapeInStaticDirection();
+        if (escapeInStaticDir != null)
+        {
+            escapeInStaticDir.SetDirection(new Vector2(escapeInStaticDir.GetDirection().x, (float)toDouble));
+        }
+    }
+
+    public void OnAdditionalXChange(InputField fieldX)
+    {
+        var str = fieldX.text;
+        if (str.Length == 0)
+        {
+            return;
+        }
+        var toDouble = Convert.ToDouble(str);
+        if (toDouble == null)
+        {
+            return;
+        }
+
+        var escapeInStaticDir = GetEscapeInStaticDirection();
+        if (escapeInStaticDir != null)
+        {
+            escapeInStaticDir.SetDirection(new Vector2((float)toDouble, escapeInStaticDir.GetDirection().y));
         }
     }
 
