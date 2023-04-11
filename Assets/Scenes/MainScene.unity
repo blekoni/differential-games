@@ -505,8 +505,6 @@ MonoBehaviour:
   m_isAlive: 0
   m_isVisible: 1
   m_shouldAliveOnCollision: 0
-  m_behaviour: 1
-  m_staticDirection: {x: 0.5, y: 0.5}
 --- !u!135 &465882686
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -740,7 +738,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.2588191, y: -0, z: -0, w: 0.9659258}
-  m_LocalPosition: {x: -365.963, y: -186.96306, z: -15}
+  m_LocalPosition: {x: 0, y: 6, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -840,8 +838,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49c6c5f046ab24494930fd28090f0f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_mainCamera: {fileID: 963194225}
-  m_topCamera: {fileID: 1683706471}
   m_gameAreaPolygon: []
   m_explosion: {fileID: 276498613}
 --- !u!4 &1043702854
@@ -885,7 +881,6 @@ MonoBehaviour:
   m_isAlive: 0
   m_isVisible: 1
   m_shouldAliveOnCollision: 1
-  m_behaviour: 1
 --- !u!136 &1116176620
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1116,7 +1111,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1683706471}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -365.963, y: -173.96306, z: 0}
+  m_LocalPosition: {x: 0, y: 30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1344,6 +1339,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2119191978}
+  - component: {fileID: 2119191979}
   m_Layer: 0
   m_Name: Cameras
   m_TagString: Untagged
@@ -1359,7 +1355,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2119191977}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 365.963, y: 193.96306, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1369,3 +1365,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2119191979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2119191977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b63cff1b06d349fe9ab5406d63a65e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_cameras:
+  - {fileID: 963194225}
+  - {fileID: 1683706471}

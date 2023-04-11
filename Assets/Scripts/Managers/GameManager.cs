@@ -17,9 +17,6 @@ public class GameManager : MonoBehaviour
         Ended
     }
 
-    [SerializeField] GameObject m_mainCamera;
-    [SerializeField] GameObject m_topCamera;
-
     public static GameManager m_instance;
 
     List<Player> m_pursuers = new List<Player>();
@@ -70,24 +67,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_mainCamera.SetActive(true);
-        m_topCamera.SetActive(false);
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown("q"))
-        {
-            m_mainCamera.SetActive(true);
-            m_topCamera.SetActive(false);
-        }
-
-        if(Input.GetKeyDown("w"))
-        {
-            m_mainCamera.SetActive(false);
-            m_topCamera.SetActive(true);
-        }
-
         if(m_gameStatus == GameStatus.InProgress && 
             IsGameEnded())
         {
