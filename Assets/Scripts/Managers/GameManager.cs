@@ -17,11 +17,27 @@ public class GameManager : MonoBehaviour
         Ended
     }
 
+    public enum FinishGame
+    {
+        AllEscapersDestroyed,
+        EscaperOutOfZone,
+        OutOfTime,
+        StoppedByUser
+    }
+
+    public struct GameResult
+    {
+        public FinishGame result;
+        public float distanceCompByPursuer;
+        public float distanceCompByEscaper;
+    }
+
     public static GameManager m_instance;
 
     List<Player> m_pursuers = new List<Player>();
     List<Player> m_escapers = new List<Player>();
     GameStatus m_gameStatus = GameStatus.NotStarted;
+    GameResult m_gameResult;
 
     [SerializeField] List<Vector2> m_gameAreaPolygon;
 
@@ -74,7 +90,7 @@ public class GameManager : MonoBehaviour
         if(m_gameStatus == GameStatus.InProgress && 
             IsGameEnded())
         {
-            m_gameStatus = GameStatus.Ended;
+            StopGame(FinishGame.AllEscapersDestroyed);
         }
         else if(m_gameStatus == GameStatus.Ended)
         {
@@ -105,6 +121,28 @@ public class GameManager : MonoBehaviour
     {
         MakeAllAlive();
         m_gameStatus = GameStatus.InProgress;
+    }
+
+    public void StopGame(FinishGame finishGame)
+    {
+        //MakeAllAlive();
+        m_gameResult = CreateGameResult(finishGame);
+        m_gameStatus = GameStatus.Ended;
+    }
+
+    private GameResult CreateGameResult(FinishGame finishGame)
+    {
+        GameResult gameRes = new GameResult();
+        gameRes.result = finishGame;
+        gameRes.distanceCompByPursuer = m_pursuers[0].GetTravelDistance();
+        gameRes.distanceCompByEscaper = m_escapers[0].GetTravelDistance();
+        return gameRes;
+    }
+
+
+    public GameResult GetGameResult()
+    {
+        return m_gameResult;
     }
 
     public void MakeAllAlive()

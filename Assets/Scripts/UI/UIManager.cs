@@ -13,6 +13,8 @@ public class UIManager : MonoBehaviour
     public Text gameResult;
 
     [SerializeField] List<GameObject> dontDestroyUIList;
+    [SerializeField] GameObject m_startButton;
+    [SerializeField] GameObject m_stopButton;
 
     private void Start()
     {
@@ -28,11 +30,27 @@ public class UIManager : MonoBehaviour
             m_framesCount++;
             currentTime += Time.deltaTime;
             UpdateTimer();
+
+            TimeSpan time = TimeSpan.FromSeconds(currentTime);
+            if (time.Seconds > 4)
+            {
+                GameManager.Get().StopGame(GameManager.FinishGame.OutOfTime);
+            }
         }
         else if(gameStatus == GameManager.GameStatus.Ended)
         {
             UpdateGameResult();
-        }    
+        }
+
+        if (m_startButton)
+        {
+            m_startButton.SetActive(gameStatus != GameManager.GameStatus.InProgress);
+        }
+
+        if (m_stopButton)
+        {
+            m_stopButton.SetActive(gameStatus == GameManager.GameStatus.InProgress);
+        }
     }
 
     public void Awake()
@@ -67,29 +85,40 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        gameResult.text = "Game has been finished by destroying all escapers \n";
-        gameResult.text += ("Game time is: " + timerText.text + "\n");
+        var gamRes = GameManager.Get().GetGameResult();
 
-        var pursuerCounter = 1;
-        var pursuers = GameManager.Get().GetPusuers();
-        foreach(var pursuer in pursuers)
+        gameResult.text = "Game has been ";
+        if(gamRes.result == GameManager.FinishGame.AllEscapersDestroyed)
         {
-            if(!pursuer)
-            {
-                continue;
-            }
-
-            var value = pursuer.GetTravelDistance();
-            gameResult.text += ("Pursuer " + pursuerCounter.ToString() + ": \n");
-            gameResult.text += ("completed distance - " + pursuer.GetTravelDistance().ToString() + "\n");
-            pursuerCounter++;
+            gameResult.text += "finished since all escapers were destroyed.\n";
         }
+        else if (gamRes.result == GameManager.FinishGame.EscaperOutOfZone)
+        {
+            gameResult.text += "finished since all escapers are out of game area.\n";
+        }
+        else if(gamRes.result == GameManager.FinishGame.OutOfTime)
+        {
+            gameResult.text += "finished since no time left.\n";
+        }
+        else if (gamRes.result == GameManager.FinishGame.StoppedByUser)
+        {
+            gameResult.text += "stopped by user.\n";
+        }
+        gameResult.text += ("Game time is: " + timerText.text + "\n");
+        gameResult.text += ("Distance completed by pursuer: " + gamRes.distanceCompByPursuer.ToString() + "\n");
+        gameResult.text += ("Distance completed by escaper: " + gamRes.distanceCompByEscaper.ToString() + "\n");
     }
 
     public void OnStartButtonClicked()
     {
         GameManager.Get().StartGame();
         ResetUI();
+    }
+
+    public void OnStopButtonClicked()
+    {
+        GameManager.Get().StopGame(GameManager.FinishGame.StoppedByUser);
+        //ResetUI();
     }
 
     private void ResetUI()
@@ -136,17 +165,4 @@ public class UIManager : MonoBehaviour
         }
         ResetUI();
     }
-
-    Player GetPursuer()
-    {
-        var pursuers = GameManager.Get().GetPusuers();
-
-        if (pursuers.Count == 0)
-        {
-            return null;
-        }
-
-        return pursuers[0];
-    }
-
 }

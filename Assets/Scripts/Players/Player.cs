@@ -11,7 +11,6 @@ public class Player : MonoBehaviour
     [SerializeField] bool  m_shouldAliveOnCollision = false;
 
     protected Behavior m_behaviorHelper;
-    bool m_bFlag = false;
 
     protected Vector3 m_moveDirection = new Vector3(1.0f, 0.0f, 0.0f);
 
@@ -28,18 +27,6 @@ public class Player : MonoBehaviour
         if (GameManager.Get().GetGameStatus() == GameManager.GameStatus.InProgress)
         {
             var moveVec2d = m_behaviorHelper.GetNextStepDirection(GetPosition(), GetDirection());
-
-            //bool wind = false;
-            //if (wind)
-            //{
-            //    var windVec = new Vector2(0.02f, 0.0f);
-
-            //    if (m_bFlag)
-            //        moveVec2d = moveVec2d - windVec;
-            //    else
-            //        moveVec2d = moveVec2d + windVec;
-            //}
-
             var moveVec = MathUtil.Vec2ToVec3(moveVec2d.normalized);
             RotateToDirection(moveVec);
             transform.position += moveVec * GetSpeed() * Time.deltaTime;
