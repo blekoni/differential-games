@@ -8,6 +8,17 @@ public class MouseManager : MonoBehaviour
     GameObject m_selectedObject;
     List<Color> m_oldColors = new List<Color>();
 
+    public static MouseManager m_instance;
+    public static MouseManager Get()
+    {
+        return m_instance;
+    }
+
+    private void Awake()
+    {
+        m_instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +34,11 @@ public class MouseManager : MonoBehaviour
         }
 
         if(EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
+        if(!Camera.main)
         {
             return;
         }

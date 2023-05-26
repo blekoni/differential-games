@@ -20,6 +20,11 @@ public class Pursuer : Player
             return;
         }
 
+        if (GameManager.Get().GetGameStatus() != GameManager.GameStatus.InProgress)
+        {
+            return;
+        }
+
         if (collision.gameObject.CompareTag("Escaper"))
         {
             Die();
@@ -30,6 +35,11 @@ public class Pursuer : Player
     {
         Debug.Log(other.gameObject.name);
         if (ShouldAliveOnCollision())
+        {
+            return;
+        }
+
+        if (GameManager.Get().GetGameStatus() != GameManager.GameStatus.InProgress)
         {
             return;
         }

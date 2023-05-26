@@ -2,6 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+struct PlayerSettings
+{
+    public Vector2 position;
+    public float speed;
+}
 
 public class Player : MonoBehaviour
 {
@@ -15,6 +20,15 @@ public class Player : MonoBehaviour
     protected Vector3 m_moveDirection = new Vector3(1.0f, 0.0f, 0.0f);
 
     List<Vector2> m_path = new List<Vector2>();
+
+    PlayerSettings m_prevGameSettings;
+
+
+    public void Start()
+    {
+        m_prevGameSettings.position = MathUtil.Vec3ToVec2(transform.position);
+        m_prevGameSettings.speed = m_speed;
+    }
 
     // Update is called once per frame
     public void Update()
@@ -32,7 +46,7 @@ public class Player : MonoBehaviour
             transform.position += moveVec * GetSpeed() * Time.deltaTime;
             AddPath(MathUtil.Vec3ToVec2(transform.position));
         }
-        else if(GameManager.Get().GetGameStatus() == GameManager.GameStatus.Ended)
+        else if (GameManager.Get().GetGameStatus() == GameManager.GameStatus.Ended)
         {
             SetIsVisible(false);
         }
@@ -132,8 +146,11 @@ public class Player : MonoBehaviour
 
     public void RotateToDirection(Vector3 moveVec)
     {
-        var angle = Vector3.Angle(m_moveDirection.normalized, moveVec.normalized);
+        float angle = Vector3.Angle(m_moveDirection.normalized, moveVec.normalized);
         var crossProduct = Vector3.Cross(m_moveDirection, moveVec).normalized;
+
+        if (angle < 1.0f)
+            return;
 
         float sign = crossProduct.y > 0.0f ? 1.0f : -1.0f;
         transform.Rotate(crossProduct, angle);
@@ -149,6 +166,13 @@ public class Player : MonoBehaviour
     public void SetSpeed(float speed)
     {
         m_speed = speed;
+        m_prevGameSettings.speed = speed;
+    }
+
+    public void SetPosition(Vector2 position)
+    {
+        transform.position = MathUtil.Vec2ToVec3(position, transform.position.y);
+        m_prevGameSettings.position = position;
     }
 
     public void AddPath(Vector2 position)
@@ -210,5 +234,23 @@ public class Player : MonoBehaviour
     virtual public void SetBehavior(Behavior.BehaviorType behaviorType)
     {
         return;
+    }
+
+    public void Reset()
+    {
+        m_path.Clear();
+        m_speed = m_prevGameSettings.speed;
+        transform.position = (MathUtil.Vec2ToVec3(m_prevGameSettings.position, transform.position.y));
+    }
+
+    public void OnGameStart()
+    {
+        m_prevGameSettings.position = MathUtil.Vec3ToVec2(transform.position);
+        m_prevGameSettings.speed = m_speed;
+    }
+
+    public bool IsInGameArea(List<Vector2> polygon)
+    {
+        return MathUtil.IsPointInPolygon(MathUtil.Vec3ToVec2(transform.position), polygon);
     }
 }

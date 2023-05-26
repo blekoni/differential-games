@@ -187,14 +187,17 @@ public class PlayerUI : MonoBehaviour
             if (dropDown.value == 0)
             {
                 m_player.SetBehavior(Behavior.BehaviorType.EscapeFromClosestPursuer);
+                GameManager.Get().SetGameType(GameManager.GameType.UntilTime);
             }
             else if (dropDown.value == 1)
             {
                 m_player.SetBehavior(Behavior.BehaviorType.EscapeInStaticDirection);
+                GameManager.Get().SetGameType(GameManager.GameType.UntilTime);
             }
             else if (dropDown.value == 2)
             {
                 m_player.SetBehavior(Behavior.BehaviorType.EscapeFromArea);
+                GameManager.Get().SetGameType(GameManager.GameType.UntilOutOfZone);
             }
         }
 
@@ -217,7 +220,8 @@ public class PlayerUI : MonoBehaviour
 
         if (m_player != null)
         {
-            m_player.transform.position = new Vector3(m_player.transform.position.x, m_player.transform.position.y, (float)toDouble);
+            m_player.SetPosition(new Vector2(m_player.transform.position.x, (float)toDouble));
+           // m_player.transform.position = new Vector3(m_player.transform.position.x, m_player.transform.position.y, (float)toDouble);
         }
     }
 
@@ -236,7 +240,8 @@ public class PlayerUI : MonoBehaviour
 
         if (m_player != null)
         {
-            m_player.transform.position = new Vector3((float)toDouble, m_player.transform.position.y, m_player.transform.position.z);
+            m_player.SetPosition(new Vector2((float)toDouble, m_player.transform.position.z));
+            //m_player.transform.position = new Vector3((float)toDouble, m_player.transform.position.y, m_player.transform.position.z);
         }
     }
 

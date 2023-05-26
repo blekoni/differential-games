@@ -18,6 +18,11 @@ public class Escaper : Player
             return;
         }
 
+        if(GameManager.Get().GetGameStatus() != GameManager.GameStatus.InProgress)
+        {
+            return;
+        }
+
         if (collision.gameObject.CompareTag("Pursuer"))
         {
             Die();
@@ -28,6 +33,11 @@ public class Escaper : Player
     {
         Debug.Log(other.gameObject.name);
         if (ShouldAliveOnCollision())
+        {
+            return;
+        }
+
+        if (GameManager.Get().GetGameStatus() != GameManager.GameStatus.InProgress)
         {
             return;
         }
@@ -52,5 +62,14 @@ public class Escaper : Player
         {
             m_behaviorHelper = new EscapeInStaticDirection(new Vector2(1.0f, 0.0f));
         }
+    }
+
+    public void OnGameStart()
+    {
+        if (m_behaviorHelper.GetBehaviorType() == Behavior.BehaviorType.EscapeFromArea)
+        {
+            m_behaviorHelper = new EscapeFromArea(MathUtil.Vec3ToVec2(transform.position));
+        }
+        base.OnGameStart();
     }
 }

@@ -34,7 +34,7 @@ public class ParallelPursuit : Behavior
 
         Vector2 newDir = MathUtil.Rotate(Vector2.right, alphaPusuer);
 
-        Debug.Log(fi);
+        //Debug.Log(alphaPusuer);
         //var toEscaperVec = (closestEscaper.GetPosition() - currentPos).normalized;
 
         //var fi = Vector2.Angle(m_xAxis, toEscaperVec);

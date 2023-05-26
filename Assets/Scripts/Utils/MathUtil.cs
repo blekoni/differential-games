@@ -41,4 +41,31 @@ public class MathUtil
 
         return normalizedVec;
     }
+
+    public static bool IsPointInPolygon(Vector2 pt, List<Vector2> polygon)
+    {
+        if (polygon.Count == 0)
+        {
+            return false;
+        }
+
+        for (var i = 1; i <= polygon.Count; ++i)
+        {
+            var p1 = polygon[i - 1];
+            var p2 = polygon[i % polygon.Count];
+
+            if(DistanceFromPointToLine(pt, p1, p2) < 0.1f)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static float DistanceFromPointToLine(Vector2 pt, Vector2 startPtLine, Vector2 endPtLine)
+    {
+        Ray ray = new Ray(MathUtil.Vec2ToVec3(startPtLine), MathUtil.Vec2ToVec3(endPtLine - startPtLine));
+        float distance = Vector3.Cross(ray.direction, MathUtil.Vec2ToVec3(pt) - ray.origin).magnitude;
+        return distance;
+    }
 }
