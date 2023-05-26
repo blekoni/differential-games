@@ -26,6 +26,8 @@ public class EscapeFromArea : Behavior
         }
 
         m_dir = (m_nearestPt - currentPos).normalized;
+
+        m_behaviorType = BehaviorType.EscapeFromArea;
     }
 
     public override Vector2 GetNextStepDirection(Vector2 currentPos, Vector2 currentDir)

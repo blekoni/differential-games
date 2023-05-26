@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class EscapeFromClosestPursuer : Behavior
 {
+    public EscapeFromClosestPursuer()
+    {
+        m_behaviorType = BehaviorType.EscapeFromClosestPursuer;
+    }
+
     public override Vector2 GetNextStepDirection(Vector2 currentPos, Vector2 currentDir)
     {
         Player closestPursuer = GetClosestEnemy(GameManager.PlayerRole.Puriuer, currentPos, true);

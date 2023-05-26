@@ -5,27 +5,10 @@ using UnityEngine;
 
 public class Pursuer : Player
 {
-    enum Behaviour
-    {
-        SimplePursuit,
-        ParallelPursuit
-    }
-
-    [SerializeField] Behaviour m_behaviour = Behaviour.SimplePursuit;
-
-    bool m_bflag = false;
-
     // Start is called before the first frame update
     void Start()
     {
-        if(m_behaviour == Behaviour.SimplePursuit)
-        {
-            m_behaviorHelper = new SimplePursuit();
-        }
-        else if (m_behaviour == Behaviour.ParallelPursuit)
-        {
-            m_behaviorHelper = new ParallelPursuit();
-        }
+        SetBehavior(Behavior.BehaviorType.SimplePursuit);
 
         SetIsVisible(IsVisible());
     }
@@ -33,6 +16,11 @@ public class Pursuer : Player
     public void OnCollisionEnter(Collision collision)
     {
         if (ShouldAliveOnCollision())
+        {
+            return;
+        }
+
+        if (GameManager.Get().GetGameStatus() != GameManager.GameStatus.InProgress)
         {
             return;
         }
@@ -51,9 +39,26 @@ public class Pursuer : Player
             return;
         }
 
+        if (GameManager.Get().GetGameStatus() != GameManager.GameStatus.InProgress)
+        {
+            return;
+        }
+
         if (other.gameObject.CompareTag("Escaper"))
         {
             Die();
+        }
+    }
+
+    public override void SetBehavior(Behavior.BehaviorType behaviorType)
+    {
+        if (behaviorType == Behavior.BehaviorType.SimplePursuit)
+        {
+            m_behaviorHelper = new SimplePursuit();
+        }
+        else if (behaviorType == Behavior.BehaviorType.ParallelPursuit)
+        {
+            m_behaviorHelper = new ParallelPursuit();
         }
     }
 }

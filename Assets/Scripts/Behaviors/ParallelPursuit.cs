@@ -7,6 +7,11 @@ public class ParallelPursuit : Behavior
     private Vector2 m_xAxis = new Vector2(1.0f, 0.0f);
     private float m_speed = 1.0f;
 
+    public ParallelPursuit()
+    {
+        m_behaviorType = BehaviorType.ParallelPursuit;
+    }
+
     public override Vector2 GetNextStepDirection(Vector2 currentPos, Vector2 currentDir)
     {
         Player closestEscaper = GetClosestEnemy(GameManager.PlayerRole.Escaper, currentPos, false);
@@ -29,7 +34,7 @@ public class ParallelPursuit : Behavior
 
         Vector2 newDir = MathUtil.Rotate(Vector2.right, alphaPusuer);
 
-        Debug.Log(fi);
+        //Debug.Log(alphaPusuer);
         //var toEscaperVec = (closestEscaper.GetPosition() - currentPos).normalized;
 
         //var fi = Vector2.Angle(m_xAxis, toEscaperVec);
