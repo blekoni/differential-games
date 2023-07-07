@@ -1049,7 +1049,7 @@ GameObject:
   - component: {fileID: 396624831}
   - component: {fileID: 396624832}
   m_Layer: 5
-  m_Name: PursuerUI
+  m_Name: PlayerUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
