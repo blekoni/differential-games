@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
 
     public enum GameType
     {
+        TypicalGame,
         UntilTime,
         UntilOutOfZone
     }
@@ -104,8 +105,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_gameSettings.gameType = GameType.UntilTime;
-        m_gameSettings.gameTime = 30;
+        m_gameSettings.gameType = GameType.TypicalGame;
+        m_gameSettings.gameTime = 10;
     }
 
     private void Update()
@@ -276,9 +277,14 @@ public class GameManager : MonoBehaviour
         return m_gameStatus;
     }
 
-    public float GetGameTime()
+    public float GetCurrentGameTime()
     {
         return m_gameTime;
+    }
+
+    public int GetGameTime()
+    {
+        return m_gameSettings.gameTime;
     }
 
     private bool IsGameFinished()
@@ -316,7 +322,11 @@ public class GameManager : MonoBehaviour
     public void SetGameType(GameType gameType)
     {
         m_gameSettings.gameType = gameType;
-        if (gameType == GameType.UntilTime)
+        if (gameType == GameType.TypicalGame)
+        {
+            DebugUtil.Clean();
+        }
+        else if (gameType == GameType.UntilTime)
         {
             DebugUtil.Clean();
         }
@@ -324,5 +334,11 @@ public class GameManager : MonoBehaviour
         {
             DebugUtil.DrawPolyline(m_gameSettings.gameAreaPolygon, Color.yellow);
         }
+    }
+
+    public void SetUntilTimeGameType(int gameTimeInSeconds)
+    {
+        SetGameType(GameType.UntilTime);
+        m_gameSettings.gameTime = gameTimeInSeconds;
     }
 }
