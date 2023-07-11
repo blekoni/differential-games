@@ -324,15 +324,18 @@ public class GameManager : MonoBehaviour
         m_gameSettings.gameType = gameType;
         if (gameType == GameType.TypicalGame)
         {
+            GridManager.Get().SetDefaultColorToGrid();
             DebugUtil.Clean();
         }
         else if (gameType == GameType.UntilTime)
         {
+            GridManager.Get().SetDefaultColorToGrid();
             DebugUtil.Clean();
         }
-        else
+        else 
         {
-            DebugUtil.DrawPolyline(m_gameSettings.gameAreaPolygon, Color.yellow);
+            GridManager.Get().SetActiveColorToGrid();
+            //DebugUtil.DrawPolyline(m_gameSettings.gameAreaPolygon, Color.yellow);
         }
     }
 
@@ -340,5 +343,10 @@ public class GameManager : MonoBehaviour
     {
         SetGameType(GameType.UntilTime);
         m_gameSettings.gameTime = gameTimeInSeconds;
+    }
+
+    public GameType GetGameType()
+    {
+        return m_gameSettings.gameType;
     }
 }

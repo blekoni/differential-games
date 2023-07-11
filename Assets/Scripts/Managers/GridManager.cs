@@ -10,6 +10,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Tile m_xAxisPrefab;
     [SerializeField] private Tile m_yAxisPrefab;
 
+    List<Tile> m_pickedTiles = new List<Tile>();
 
     private void Start()
     {
@@ -47,10 +48,67 @@ public class GridManager : MonoBehaviour
                 if (gridTile)
                 {
                     var isOffset = (x % 4 == 0 && y % 4 != 0) || (x % 4 != 0 && y % 4 == 0);
-                    gridTile.Init(isOffset);
+                    gridTile.Init(this, isOffset, new Vector2(x, y));
                     gridTile.name = $"Tile {x} {y}";
                 }
             }
         }
+    }
+
+    public void AddPickedTile(Tile tile)
+    {
+        if(PickShouldBeReset(tile.Position()))
+        {
+            foreach (var pickedTile in m_pickedTiles)
+            {
+                pickedTile.DeSelect();
+            }
+            m_pickedTiles.Clear();
+        }
+
+        m_pickedTiles.Add(tile);
+    }
+
+    private bool PickShouldBeReset(Vector2 newTilePosition)
+    {
+        foreach(var tile in m_pickedTiles)
+        {
+            var pickedTilePosition = tile.Position();
+            var distanceToPicked = Mathf.Abs(pickedTilePosition.x - newTilePosition.x) + Mathf.Abs(pickedTilePosition.y - newTilePosition.y);
+            if (distanceToPicked <= 2.5f)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void SetActiveColorToGrid()
+    {
+        foreach (var pickedTile in m_pickedTiles)
+        {
+            pickedTile.SetActiveColor();
+        }
+    }
+
+    public void SetDefaultColorToGrid()
+    {
+        foreach (var pickedTile in m_pickedTiles)
+        {
+            pickedTile.SetDefaultColor();
+        }
+    }
+
+    private static GridManager m_instance;
+
+    public static GridManager Get()
+    {
+        return m_instance;
+    }
+
+    public void Awake()
+    {
+        m_instance = this;
     }
 }
