@@ -1,19 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-struct BBox
-{
-    public Vector2 minPos;
-    public Vector2 maxPos;
-}
+using UnityEngine.EventSystems;
 
 public class Tile : MonoBehaviour
 {
     [SerializeField] private Color m_baseColor, m_offsetColor;
     [SerializeField] private SpriteRenderer m_renderer;
 
-    BBox m_bbox;
+    Bounds m_bbox;
     
     bool m_bIsPicked = false;
     bool m_bIsOffset = false;
@@ -23,8 +18,8 @@ public class Tile : MonoBehaviour
     public void Init(GridManager gridManager, bool isOffset, Vector2 position)
     {
         m_gridManager = gridManager;
-        m_bbox.minPos = position;
-        m_bbox.maxPos = position + new Vector2(2.0f, 2.0f);
+        m_bbox.min = position;
+        m_bbox.max = position + new Vector2(2.0f, 2.0f);
         m_bIsOffset = isOffset;
         SetColor(DefaultColor());
     }
@@ -38,7 +33,12 @@ public class Tile : MonoBehaviour
 
     public Vector2 Position()
     {
-        return m_bbox.minPos;
+        return m_bbox.min;
+    }
+
+    public Bounds GetBounds()
+    {
+        return m_bbox;
     }
 
     private void SetColor(Color color)
@@ -62,6 +62,11 @@ public class Tile : MonoBehaviour
     private void OnMouseDown()
     {
         if(GameManager.Get().GetGameType() != GameManager.GameType.UntilOutOfZone)
+        {
+            return;
+        }
+
+        if(EventSystem.current.IsPointerOverGameObject())
         {
             return;
         }

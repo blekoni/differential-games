@@ -100,6 +100,29 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public Bounds? GetPickedBounds()
+    {
+        if(m_pickedTiles.Count == 0)
+        {
+            return null;
+        }
+
+        Vector2 min = m_pickedTiles[0].Position();
+        Vector2 max = m_pickedTiles[0].Position();
+        foreach (var tile in m_pickedTiles)
+        {
+            var tileBounds = tile.GetBounds();
+            min.x = tileBounds.min.x < min.x ? tileBounds.min.x : min.x;
+            min.y = tileBounds.min.y < min.y ? tileBounds.min.y : min.y;
+            max.x = tileBounds.max.x > max.x ? tileBounds.max.x : max.x;
+            max.y = tileBounds.max.y > max.y ? tileBounds.max.y : max.y;
+        }
+
+        Bounds bounds = new Bounds();
+        bounds.SetMinMax(MathUtil.Vec2ToVec3(min), MathUtil.Vec2ToVec3(max));
+        return bounds;
+    }
+
     private static GridManager m_instance;
 
     public static GridManager Get()

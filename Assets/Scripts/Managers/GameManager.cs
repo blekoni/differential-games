@@ -45,7 +45,6 @@ public class GameManager : MonoBehaviour
     {
         public GameType gameType;
         public int gameTime;
-        public List<Vector2> gameAreaPolygon;
     }
 
     public static GameManager m_instance;
@@ -61,14 +60,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        m_gameSettings.gameAreaPolygon = new List<Vector2>();
-        m_gameSettings.gameAreaPolygon.Add(new Vector2(-20.0f, -30.0f));
-        m_gameSettings.gameAreaPolygon.Add(new Vector2(-20.0f, 20.0f));
-        m_gameSettings.gameAreaPolygon.Add(new Vector2(-10.0f, 20.0f));
-        //m_gameSettings.gameAreaPolygon.Add(new Vector2(20.0f, 0.0f));
-        m_gameSettings.gameAreaPolygon.Add(new Vector2(35.0f, -30.0f));
-
-
         var pursuers = GameObject.FindGameObjectsWithTag("Pursuer");
         foreach (var pursuer in pursuers)
         {
@@ -267,11 +258,6 @@ public class GameManager : MonoBehaviour
         explosion.transform.position = explodePosition;
     }
 
-    public List<Vector2>GetGameAreaPolygon()
-    {
-        return m_gameSettings.gameAreaPolygon;
-    }
-
     public GameStatus GetGameStatus()
     {
         return m_gameStatus;
@@ -299,12 +285,20 @@ public class GameManager : MonoBehaviour
             }
         }
         else if(m_gameSettings.gameType == GameType.UntilOutOfZone)
-        { 
+        {
+            var gridBounds = GridManager.Get().GetPickedBounds();
+            if(!gridBounds.HasValue)
+            {
+                StopGame(FinishGame.EscaperOutOfZone);
+                return false;
+            }
+
             foreach (Escaper escaper in m_escapers)
             {
                 if (escaper)
                 {
-                    if (escaper.IsInGameArea(m_gameSettings.gameAreaPolygon))
+                    var escaperPos = escaper.GetPosition();
+                    if (!gridBounds.Value.Contains(MathUtil.Vec2ToVec3(escaperPos)))
                     {
                         return false;
                     }
@@ -334,8 +328,14 @@ public class GameManager : MonoBehaviour
         }
         else 
         {
+            foreach(var escaper in m_escapers)
+            {
+                if (escaper)
+                {
+                    escaper.SetBehavior(Behavior.BehaviorType.EscapeFromArea);
+                }    
+            }
             GridManager.Get().SetActiveColorToGrid();
-            //DebugUtil.DrawPolyline(m_gameSettings.gameAreaPolygon, Color.yellow);
         }
     }
 
