@@ -123,6 +123,10 @@ public class GridManager : MonoBehaviour
         return bounds;
     }
 
+    public bool IsAnyPickedTiles()
+    {
+        return m_pickedTiles.Count > 0;
+    }
     private static GridManager m_instance;
 
     public static GridManager Get()
