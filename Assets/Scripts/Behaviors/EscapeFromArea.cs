@@ -9,25 +9,16 @@ public class EscapeFromArea : Behavior
 
     public EscapeFromArea(Vector2 currentPos)
     {
-        var gameAreaPolygon = GameManager.Get().GetGameAreaPolygon();
-
-        float minDistance = float.MaxValue;
-        for (int i = 1; i <= gameAreaPolygon.Count; ++i)
+        m_behaviorType = BehaviorType.EscapeFromArea;
+        var pickedBounds = GridManager.Get().GetPickedBounds();
+        if(!pickedBounds.HasValue)
         {
-            var p1 = gameAreaPolygon[i - 1];
-            var p2 = gameAreaPolygon[i % gameAreaPolygon.Count];
-            var currentPt = FindNearestPointOnLine(p1, p2 - p1, currentPos);
-            var distance = Vector2.Distance(currentPos, currentPt);
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                m_nearestPt = currentPt;
-            }
+            return;
         }
 
+        var closestPt = pickedBounds.Value.ClosestPoint(MathUtil.Vec2ToVec3(currentPos));
+        m_nearestPt = MathUtil.Vec3ToVec2(closestPt);
         m_dir = (m_nearestPt - currentPos).normalized;
-
-        m_behaviorType = BehaviorType.EscapeFromArea;
     }
 
     public override Vector2 GetNextStepDirection(Vector2 currentPos, Vector2 currentDir)

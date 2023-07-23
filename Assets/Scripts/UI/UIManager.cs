@@ -11,9 +11,6 @@ public class UIManager : MonoBehaviour
     public Text gameResult;
 
     [SerializeField] List<GameObject> dontDestroyUIList;
-    [SerializeField] GameObject m_startButton;
-    [SerializeField] GameObject m_stopButton;
-    [SerializeField] GameObject m_resetButton;
 
     private void Start()
     {
@@ -32,26 +29,13 @@ public class UIManager : MonoBehaviour
         {
             UpdateGameResult();
         }
-
-        if (m_startButton)
-        {
-            m_startButton.SetActive(gameStatus != GameManager.GameStatus.InProgress);
-        }
-
-        if (m_stopButton)
-        {
-            m_stopButton.SetActive(gameStatus == GameManager.GameStatus.InProgress);
-        }
-
-        if(m_resetButton)
-        {
-            m_resetButton.SetActive(gameStatus == GameManager.GameStatus.Ended);
-        }
     }
 
     public void Awake()
     {
-        foreach(var uiElement in dontDestroyUIList)
+        m_instance = this;
+
+        foreach (var uiElement in dontDestroyUIList)
         {
             if (uiElement)
             {
@@ -62,7 +46,7 @@ public class UIManager : MonoBehaviour
 
     private void UpdateTimer()
     {
-        TimeSpan time = TimeSpan.FromSeconds(GameManager.Get().GetGameTime());
+        TimeSpan time = TimeSpan.FromSeconds(GameManager.Get().GetCurrentGameTime());
         if (timerText)
         {
             timerText.text = time.ToString(@"mm\:ss\:fff");
@@ -107,26 +91,7 @@ public class UIManager : MonoBehaviour
         gameResult.text += ("Distance completed by escaper: " + gamRes.distanceCompByEscaper.ToString() + "\n ");
     }
 
-    public void OnStartButtonClicked()
-    {
-        GameManager.Get().StartGame();
-        ResetUI();
-    }
-
-    public void OnStopButtonClicked()
-    {
-        GameManager.Get().StopGame(GameManager.FinishGame.StoppedByUser);
-        //ResetUI();
-    }
-
-    public void OnResetButtonClicked()
-    {
-        GameManager.Get().ResetGame();
-        ResetUI();
-    }
-
-
-    private void ResetUI()
+    public void ResetUI()
     {
         if (gameResult)
         {
@@ -161,5 +126,12 @@ public class UIManager : MonoBehaviour
                 break;
         }
         ResetUI();
+    }
+
+    private static UIManager m_instance;
+
+    public static UIManager Get()
+    {
+        return m_instance;
     }
 }
