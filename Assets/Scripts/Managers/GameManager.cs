@@ -58,8 +58,20 @@ public class GameManager : MonoBehaviour
 
     public GameObject m_explosion;
 
+    // GameManager is owner of all other managers
+    [SerializeField] private UIManager m_UIManager;
+    [SerializeField] private MouseManager m_mouseManager;
+    [SerializeField] private CameraManager m_cameraManager;
+    [SerializeField] private GridManager m_gridManager;
+
+
     private void Awake()
     {
+        Debug.Assert(m_UIManager);
+        Debug.Assert(m_mouseManager);
+        Debug.Assert(m_cameraManager);
+        Debug.Assert(m_gridManager);
+
         var pursuers = GameObject.FindGameObjectsWithTag("Pursuer");
         foreach (var pursuer in pursuers)
         {
@@ -140,7 +152,8 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        MouseManager.Get().ClearSelection();
+        m_UIManager.HideGameResult();
+        m_mouseManager.ClearSelection();
         m_gameTime = 0.0f;
         MakeAllAlive();
         foreach (Escaper escaper in m_escapers)
@@ -164,7 +177,7 @@ public class GameManager : MonoBehaviour
     public void StopGame(FinishGame finishGame)
     {
         m_gameResult = CreateGameResult(finishGame);
-        UIManager.Get().ShowGameResult(m_gameResult);
+        m_UIManager.ShowGameResult(m_gameResult);
         m_gameStatus = GameStatus.Ended;
     }
 
@@ -172,8 +185,8 @@ public class GameManager : MonoBehaviour
     {
         MakeAllAlive();
         DebugUtil.Clean();
-        UIManager.Get().HideGameResult();
-        //SetGameType(GameType.UntilTime);
+        m_UIManager.HideGameResult();
+
         m_gameStatus = GameStatus.NotStarted;
         foreach (Escaper escaper in m_escapers)
         {
@@ -287,7 +300,7 @@ public class GameManager : MonoBehaviour
         }
         else if(m_gameSettings.gameType == GameType.UntilOutOfZone)
         {
-            var gridBounds = GridManager.Get().GetPickedBounds();
+            var gridBounds = m_gridManager.GetPickedBounds();
             if(!gridBounds.HasValue)
             {
                 StopGame(FinishGame.EscaperOutOfZone);
@@ -319,12 +332,12 @@ public class GameManager : MonoBehaviour
         m_gameSettings.gameType = gameType;
         if (gameType == GameType.TypicalGame)
         {
-            GridManager.Get().SetDefaultColorToGrid();
+            m_gridManager.SetDefaultColorToGrid();
             DebugUtil.Clean();
         }
         else if (gameType == GameType.UntilTime)
         {
-            GridManager.Get().SetDefaultColorToGrid();
+            m_gridManager.SetDefaultColorToGrid();
             DebugUtil.Clean();
         }
         else 
@@ -336,7 +349,7 @@ public class GameManager : MonoBehaviour
                     escaper.SetBehavior(Behavior.BehaviorType.EscapeFromArea);
                 }    
             }
-            GridManager.Get().SetActiveColorToGrid();
+            m_gridManager.SetActiveColorToGrid();
         }
     }
 
@@ -349,5 +362,20 @@ public class GameManager : MonoBehaviour
     public GameType GetGameType()
     {
         return m_gameSettings.gameType;
+    }
+
+    public bool IsAnyPickedTiles()
+    {
+        return m_gridManager.IsAnyPickedTiles();
+    }
+
+    public Bounds? GetPickedBounds()
+    {
+        return m_gridManager.GetPickedBounds();
+    }
+
+    public UIManager GetUIManager()
+    {
+        return m_UIManager;
     }
 }

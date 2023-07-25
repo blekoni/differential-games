@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    public static CameraManager m_instance;
-
     [SerializeField] List<GameObject> m_cameras = new List<GameObject>();
+
     int m_activeCamera = 0;
     float m_cameraSpeed = 10.0f;
 
@@ -164,10 +163,5 @@ public class CameraManager : MonoBehaviour
         }
 
         m_activeCamera = index;
-    }
-
-    public static CameraManager Get()
-    {
-        return m_instance;
     }
 }

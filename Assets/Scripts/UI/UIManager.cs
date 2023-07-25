@@ -8,11 +8,13 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public Text timerText;
-    [SerializeField] private GameResultUI m_gameResult;
+    [SerializeField] private GameResultUI m_gameResultUI;
+    [SerializeField] private PlayerUI m_playerUI;
+
 
     private void Start()
     {
-        ResetUI();
+        HideGameResult();
     }
 
     private void Update()
@@ -24,9 +26,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void Awake()
+    private void Awake()
     {
-        m_instance = this;
+        Debug.Assert(m_gameResultUI);
+        Debug.Assert(m_playerUI);
     }
 
     private void UpdateTimer()
@@ -40,23 +43,21 @@ public class UIManager : MonoBehaviour
 
     public void ShowGameResult(GameManager.GameResult gameResult)
     {
-        m_gameResult.ShowResult(gameResult);
+        m_gameResultUI.ShowResult(gameResult);
     }
 
     public void HideGameResult()
     {
-        m_gameResult.HideResult();
+        m_gameResultUI.HideResult();
     }
 
-    public void ResetUI()
+    public void ShowPlayerUI(GameObject player)
     {
-        m_gameResult.HideResult();
+        m_playerUI.Show(player);
     }
 
-    private static UIManager m_instance;
-
-    public static UIManager Get()
+    public void HidePlayerUI()
     {
-        return m_instance;
+        m_playerUI.Hide();
     }
 }

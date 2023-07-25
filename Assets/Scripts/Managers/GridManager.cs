@@ -127,15 +127,4 @@ public class GridManager : MonoBehaviour
     {
         return m_pickedTiles.Count > 0;
     }
-    private static GridManager m_instance;
-
-    public static GridManager Get()
-    {
-        return m_instance;
-    }
-
-    public void Awake()
-    {
-        m_instance = this;
-    }
 }

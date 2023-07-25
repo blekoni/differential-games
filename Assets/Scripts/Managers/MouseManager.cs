@@ -8,17 +8,6 @@ public class MouseManager : MonoBehaviour
     GameObject m_selectedObject;
     List<Color> m_oldColors = new List<Color>();
 
-    public static MouseManager m_instance;
-    public static MouseManager Get()
-    {
-        return m_instance;
-    }
-
-    private void Awake()
-    {
-        m_instance = this;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -91,7 +80,7 @@ public class MouseManager : MonoBehaviour
 
         m_selectedObject = obj;
 
-        PlayerUI.Get().Show(obj);
+        GameManager.Get().GetUIManager().ShowPlayerUI(obj);
         HighlightObject(m_selectedObject);
     }
 
@@ -100,7 +89,7 @@ public class MouseManager : MonoBehaviour
         ClearHighlightObject(m_selectedObject);
         m_selectedObject = null;
 
-        PlayerUI.Get().Hide();
+        GameManager.Get().GetUIManager().HidePlayerUI();
     }
 
     void HighlightObject(GameObject gameObject)

@@ -18,20 +18,8 @@ public class PlayerUI : MonoBehaviour
 
     Player m_player;
 
-    public static PlayerUI m_instance;
-
     private void Start()
     {
-    }
-
-    private void Awake()
-    {
-        m_instance = this;
-    }
-
-    public static PlayerUI Get()
-    {
-        return m_instance;
     }
 
     public void Show(GameObject obj)

@@ -10,8 +10,6 @@ public class SettingsUI : MonoBehaviour
     [SerializeField] Button m_startButton;
     [SerializeField] InputField m_timeInput;
 
-    public static SettingsUI m_instance;
-
     private void Start()
     {
         m_timeInput.gameObject.active = false;
@@ -48,14 +46,12 @@ public class SettingsUI : MonoBehaviour
         {
             case GameManager.GameStatus.NotStarted:
                 GameManager.Get().StartGame();
-                UIManager.Get().ResetUI();
                 break;
             case GameManager.GameStatus.InProgress:
                 GameManager.Get().StopGame(GameManager.FinishGame.StoppedByUser);
                 break;
             case GameManager.GameStatus.Ended:
                 GameManager.Get().ResetGame();
-                UIManager.Get().ResetUI();
                 break;
             default:
                 break;
@@ -85,7 +81,7 @@ public class SettingsUI : MonoBehaviour
             case 2:
                 m_timeInput.gameObject.active = false;
                 GameManager.Get().SetGameType(GameManager.GameType.UntilOutOfZone);
-                m_startButton.interactable = GridManager.Get().IsAnyPickedTiles();
+                m_startButton.interactable = GameManager.Get().IsAnyPickedTiles();
                 break;
             default:
                 break;
