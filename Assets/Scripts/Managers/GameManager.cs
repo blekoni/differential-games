@@ -164,6 +164,7 @@ public class GameManager : MonoBehaviour
     public void StopGame(FinishGame finishGame)
     {
         m_gameResult = CreateGameResult(finishGame);
+        UIManager.Get().ShowGameResult(m_gameResult);
         m_gameStatus = GameStatus.Ended;
     }
 
@@ -171,6 +172,7 @@ public class GameManager : MonoBehaviour
     {
         MakeAllAlive();
         DebugUtil.Clean();
+        UIManager.Get().HideGameResult();
         //SetGameType(GameType.UntilTime);
         m_gameStatus = GameStatus.NotStarted;
         foreach (Escaper escaper in m_escapers)
@@ -200,7 +202,6 @@ public class GameManager : MonoBehaviour
         gameRes.distanceCompByEscaper = m_escapers[0].GetTravelDistance();
         return gameRes;
     }
-
 
     public GameResult GetGameResult()
     {

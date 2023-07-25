@@ -8,14 +8,11 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public Text timerText;
-    public Text gameResult;
-
-    [SerializeField] List<GameObject> dontDestroyUIList;
+    [SerializeField] private GameResultUI m_gameResult;
 
     private void Start()
     {
         ResetUI();
-        LoadUI();
     }
 
     private void Update()
@@ -25,23 +22,11 @@ public class UIManager : MonoBehaviour
         {
             UpdateTimer();
         }
-        else if(gameStatus == GameManager.GameStatus.Ended)
-        {
-            UpdateGameResult();
-        }
     }
 
     public void Awake()
     {
         m_instance = this;
-
-        foreach (var uiElement in dontDestroyUIList)
-        {
-            if (uiElement)
-            {
-                DontDestroyOnLoad(uiElement);
-            }
-        }
     }
 
     private void UpdateTimer()
@@ -53,79 +38,19 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void UpdateGameResult()
+    public void ShowGameResult(GameManager.GameResult gameResult)
     {
-        if (!gameResult)
-        {
-            return;
-        }
+        m_gameResult.ShowResult(gameResult);
+    }
 
-        if(gameResult.text.Length != 0)
-        {
-            return;
-        }
-
-        gameResult.gameObject.SetActive(true);
-
-        var gamRes = GameManager.Get().GetGameResult();
-
-        gameResult.text = " Game has been ";
-        if(gamRes.result == GameManager.FinishGame.AllEscapersDestroyed)
-        {
-            gameResult.text += "finished since all escapers were destroyed.\n ";
-        }
-        else if (gamRes.result == GameManager.FinishGame.EscaperOutOfZone)
-        {
-            gameResult.text += "finished since all escapers are out of game area.\n ";
-        }
-        else if(gamRes.result == GameManager.FinishGame.OutOfTime)
-        {
-            gameResult.text += "finished since no time left.\n ";
-        }
-        else if (gamRes.result == GameManager.FinishGame.StoppedByUser)
-        {
-            gameResult.text += "stopped by user.\n ";
-        }
-        gameResult.text += ("Game time is: " + timerText.text + "\n ");
-        gameResult.text += ("Distance completed by pursuer: " + gamRes.distanceCompByPursuer.ToString() + "\n ");
-        gameResult.text += ("Distance completed by escaper: " + gamRes.distanceCompByEscaper.ToString() + "\n ");
+    public void HideGameResult()
+    {
+        m_gameResult.HideResult();
     }
 
     public void ResetUI()
     {
-        if (gameResult)
-        {
-            gameResult.gameObject.SetActive(false);
-            gameResult.text = "";
-        }
-
-    }
-
-    private void LoadUI()
-    {
-        var pursuers = GameManager.Get().GetPusuers();
-    }
-    
-    public void OnAddEscaperClicked()
-    {
-        //GameManager.Get().AddEscaper();
-    }
-
-    public void OnDropDownChanged(Dropdown dropDown)
-    {
-        switch (dropDown.value)
-        {
-            case 0:
-                SceneManager.LoadScene("MainScene");
-                break;
-            case 1:
-                SceneManager.LoadScene("Scene2");
-                break;
-            default:
-                // code block
-                break;
-        }
-        ResetUI();
+        m_gameResult.HideResult();
     }
 
     private static UIManager m_instance;
