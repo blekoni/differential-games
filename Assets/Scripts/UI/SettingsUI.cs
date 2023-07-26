@@ -70,18 +70,15 @@ public class SettingsUI : MonoBehaviour
             case 0:
                 m_timeInput.gameObject.active = false;
                 GameManager.Get().SetGameType(GameManager.GameType.TypicalGame);
-                m_startButton.interactable = true;
                 break;
             case 1:
                 m_timeInput.gameObject.active = true;
                 m_timeInput.text = GameManager.Get().GetGameTime().ToString();
                 GameManager.Get().SetUntilTimeGameType(Convert.ToInt32(m_timeInput.text));
-                m_startButton.interactable = true;
                 break;
             case 2:
                 m_timeInput.gameObject.active = false;
                 GameManager.Get().SetGameType(GameManager.GameType.UntilOutOfZone);
-                m_startButton.interactable = GameManager.Get().IsAnyPickedTiles();
                 break;
             default:
                 break;
@@ -105,4 +102,8 @@ public class SettingsUI : MonoBehaviour
         GameManager.Get().SetUntilTimeGameType(toInteger);
     }
 
+    public void SetStartButtonActive(bool flag)
+    {
+        m_startButton.interactable = flag;
+    }
 }

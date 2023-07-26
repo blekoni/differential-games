@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour
     public Text timerText;
     [SerializeField] private GameResultUI m_gameResultUI;
     [SerializeField] private PlayerUI m_playerUI;
-
+    [SerializeField] private SettingsUI m_settingsUI;
 
     private void Start()
     {
@@ -25,6 +25,7 @@ public class UIManager : MonoBehaviour
     {
         Debug.Assert(m_gameResultUI);
         Debug.Assert(m_playerUI);
+        Debug.Assert(m_settingsUI);
     }
 
     public void UpdateTimer(float gameTime)
@@ -54,6 +55,11 @@ public class UIManager : MonoBehaviour
     public void HidePlayerUI()
     {
         m_playerUI.Hide();
+    }
+
+    public void SetStartButtonActive(bool flag)
+    {
+        m_settingsUI.SetStartButtonActive(flag);
     }
 
     public void ResetUI()

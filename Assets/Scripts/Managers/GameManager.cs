@@ -334,11 +334,13 @@ public class GameManager : MonoBehaviour
         if (gameType == GameType.TypicalGame)
         {
             m_gridManager.SetDefaultColorToGrid();
+            m_UIManager.SetStartButtonActive(true);
             DebugUtil.Clean();
         }
         else if (gameType == GameType.UntilTime)
         {
             m_gridManager.SetDefaultColorToGrid();
+            m_UIManager.SetStartButtonActive(true);
             DebugUtil.Clean();
         }
         else 
@@ -350,6 +352,7 @@ public class GameManager : MonoBehaviour
                     escaper.SetBehavior(Behavior.BehaviorType.EscapeFromArea);
                 }    
             }
+            m_UIManager.SetStartButtonActive(m_gridManager.IsAnyPickedTiles());
             m_gridManager.SetActiveColorToGrid();
         }
     }

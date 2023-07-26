@@ -2420,7 +2420,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Typical game
+  m_Text: Default game
 --- !u!222 &921642274
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3804,11 +3804,11 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: Typical game
+    - m_Text: Default game
       m_Image: {fileID: 0}
-    - m_Text: Time bounded game
+    - m_Text: Time game
       m_Image: {fileID: 0}
-    - m_Text: Teritory game
+    - m_Text: Escape to zone game
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4462,6 +4462,7 @@ MonoBehaviour:
   timerText: {fileID: 1888683849}
   m_gameResultUI: {fileID: 993881462}
   m_playerUI: {fileID: 396624832}
+  m_settingsUI: {fileID: 1652967667}
 --- !u!1 &1387898338
 GameObject:
   m_ObjectHideFlags: 0
@@ -6667,7 +6668,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 00:00:00
+  m_Text: 00:00:000
 --- !u!222 &1888683850
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6694,7 +6695,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 80}
+  m_SizeDelta: {x: 240, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1919075731
 GameObject:

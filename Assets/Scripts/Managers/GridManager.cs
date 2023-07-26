@@ -67,6 +67,8 @@ public class GridManager : MonoBehaviour
         }
 
         m_pickedTiles.Add(tile);
+
+        GameManager.Get().GetUIManager().SetStartButtonActive(true);
     }
 
     private bool PickShouldBeReset(Vector2 newTilePosition)
