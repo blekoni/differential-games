@@ -141,6 +141,7 @@ public class GameManager : MonoBehaviour
         if(m_gameStatus == GameStatus.InProgress)
         {
             m_gameTime += Time.deltaTime;
+            m_UIManager.UpdateTimer(m_gameTime);
             IsGameFinished();
         }
     }
@@ -185,7 +186,7 @@ public class GameManager : MonoBehaviour
     {
         MakeAllAlive();
         DebugUtil.Clean();
-        m_UIManager.HideGameResult();
+        m_UIManager.ResetUI();
 
         m_gameStatus = GameStatus.NotStarted;
         foreach (Escaper escaper in m_escapers)

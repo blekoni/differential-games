@@ -19,11 +19,6 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        var gameStatus = GameManager.Get().GetGameStatus();
-        if (gameStatus == GameManager.GameStatus.InProgress)
-        {
-            UpdateTimer();
-        }
     }
 
     private void Awake()
@@ -32,9 +27,9 @@ public class UIManager : MonoBehaviour
         Debug.Assert(m_playerUI);
     }
 
-    private void UpdateTimer()
+    public void UpdateTimer(float gameTime)
     {
-        TimeSpan time = TimeSpan.FromSeconds(GameManager.Get().GetCurrentGameTime());
+        TimeSpan time = TimeSpan.FromSeconds(gameTime);
         if (timerText)
         {
             timerText.text = time.ToString(@"mm\:ss\:fff");
@@ -59,5 +54,12 @@ public class UIManager : MonoBehaviour
     public void HidePlayerUI()
     {
         m_playerUI.Hide();
+    }
+
+    public void ResetUI()
+    {
+        HideGameResult();
+        HidePlayerUI();
+        UpdateTimer(0.0f);
     }
 }
