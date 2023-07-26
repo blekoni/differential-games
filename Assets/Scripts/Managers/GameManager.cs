@@ -44,7 +44,8 @@ public class GameManager : MonoBehaviour
     public struct GameSettings
     {
         public GameType gameType;
-        public int gameTime;
+        public int gameTimeBoundaries;
+        public Behavior.BehaviorType escaperBehavior;
     }
 
     public static GameManager m_instance;
@@ -54,7 +55,7 @@ public class GameManager : MonoBehaviour
     GameStatus m_gameStatus = GameStatus.NotStarted;
     GameResult m_gameResult;
     GameSettings m_gameSettings;
-    public float m_gameTime = 0.0f;
+    public float m_activeGameDuration = 0.0f;
 
     public GameObject m_explosion;
 
@@ -109,7 +110,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         m_gameSettings.gameType = GameType.TypicalGame;
-        m_gameSettings.gameTime = 10;
+        m_gameSettings.gameTimeBoundaries = 10;
+        m_gameSettings.escaperBehavior = Behavior.BehaviorType.EscapeFromClosestPursuer;
     }
 
     private void Update()
@@ -140,8 +142,8 @@ public class GameManager : MonoBehaviour
 
         if(m_gameStatus == GameStatus.InProgress)
         {
-            m_gameTime += Time.deltaTime;
-            m_UIManager.UpdateTimer(m_gameTime);
+            m_activeGameDuration += Time.deltaTime;
+            m_UIManager.UpdateTimer(m_activeGameDuration);
             IsGameFinished();
         }
     }
@@ -155,7 +157,7 @@ public class GameManager : MonoBehaviour
     {
         m_UIManager.HideGameResult();
         m_mouseManager.ClearSelection();
-        m_gameTime = 0.0f;
+        m_activeGameDuration = 0.0f;
         MakeAllAlive();
         foreach (Escaper escaper in m_escapers)
         {
@@ -280,20 +282,20 @@ public class GameManager : MonoBehaviour
 
     public float GetCurrentGameTime()
     {
-        return m_gameTime;
+        return m_activeGameDuration;
     }
 
     public int GetGameTime()
     {
-        return m_gameSettings.gameTime;
+        return m_gameSettings.gameTimeBoundaries;
     }
 
     private bool IsGameFinished()
     {
         if(m_gameSettings.gameType == GameType.UntilTime)
         {
-            TimeSpan time = TimeSpan.FromSeconds(m_gameTime);
-            if (time.Seconds >= m_gameSettings.gameTime)
+            TimeSpan time = TimeSpan.FromSeconds(m_activeGameDuration);
+            if (time.Seconds >= m_gameSettings.gameTimeBoundaries)
             {
                 StopGame(FinishGame.OutOfTime);
                 return true;
@@ -333,12 +335,14 @@ public class GameManager : MonoBehaviour
         m_gameSettings.gameType = gameType;
         if (gameType == GameType.TypicalGame)
         {
+            SetAllEscapersBeahvior(m_gameSettings.escaperBehavior);
             m_gridManager.SetDefaultColorToGrid();
             m_UIManager.SetStartButtonActive(true);
             DebugUtil.Clean();
         }
         else if (gameType == GameType.UntilTime)
         {
+            SetAllEscapersBeahvior(m_gameSettings.escaperBehavior);
             m_gridManager.SetDefaultColorToGrid();
             m_UIManager.SetStartButtonActive(true);
             DebugUtil.Clean();
@@ -349,18 +353,21 @@ public class GameManager : MonoBehaviour
             {
                 if (escaper)
                 {
+                    m_gameSettings.escaperBehavior = escaper.GetBehaviorType();
                     escaper.SetBehavior(Behavior.BehaviorType.EscapeFromArea);
                 }    
             }
             m_UIManager.SetStartButtonActive(m_gridManager.IsAnyPickedTiles());
             m_gridManager.SetActiveColorToGrid();
         }
+
+        m_UIManager.RefreshUI();
     }
 
     public void SetUntilTimeGameType(int gameTimeInSeconds)
     {
         SetGameType(GameType.UntilTime);
-        m_gameSettings.gameTime = gameTimeInSeconds;
+        m_gameSettings.gameTimeBoundaries = gameTimeInSeconds;
     }
 
     public GameType GetGameType()
@@ -381,5 +388,16 @@ public class GameManager : MonoBehaviour
     public UIManager GetUIManager()
     {
         return m_UIManager;
+    }
+
+    private void SetAllEscapersBeahvior(Behavior.BehaviorType type)
+    {
+        foreach (var escaper in m_escapers)
+        {
+            if (escaper)
+            {
+                escaper.SetBehavior(type);
+            }
+        }
     }
 }

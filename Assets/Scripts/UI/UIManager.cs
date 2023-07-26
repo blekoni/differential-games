@@ -68,4 +68,9 @@ public class UIManager : MonoBehaviour
         HidePlayerUI();
         UpdateTimer(0.0f);
     }
+
+    public void RefreshUI()
+    {
+        m_playerUI.RefreshUI();
+    }
 }
