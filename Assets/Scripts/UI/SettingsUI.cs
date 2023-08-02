@@ -10,8 +10,6 @@ public class SettingsUI : MonoBehaviour
     [SerializeField] Button m_startButton;
     [SerializeField] InputField m_timeInput;
 
-    public static SettingsUI m_instance;
-
     private void Start()
     {
         m_timeInput.gameObject.active = false;
@@ -48,14 +46,12 @@ public class SettingsUI : MonoBehaviour
         {
             case GameManager.GameStatus.NotStarted:
                 GameManager.Get().StartGame();
-                UIManager.Get().ResetUI();
                 break;
             case GameManager.GameStatus.InProgress:
                 GameManager.Get().StopGame(GameManager.FinishGame.StoppedByUser);
                 break;
             case GameManager.GameStatus.Ended:
                 GameManager.Get().ResetGame();
-                UIManager.Get().ResetUI();
                 break;
             default:
                 break;
@@ -74,18 +70,15 @@ public class SettingsUI : MonoBehaviour
             case 0:
                 m_timeInput.gameObject.active = false;
                 GameManager.Get().SetGameType(GameManager.GameType.TypicalGame);
-                m_startButton.interactable = true;
                 break;
             case 1:
                 m_timeInput.gameObject.active = true;
                 m_timeInput.text = GameManager.Get().GetGameTime().ToString();
                 GameManager.Get().SetUntilTimeGameType(Convert.ToInt32(m_timeInput.text));
-                m_startButton.interactable = true;
                 break;
             case 2:
                 m_timeInput.gameObject.active = false;
                 GameManager.Get().SetGameType(GameManager.GameType.UntilOutOfZone);
-                m_startButton.interactable = GridManager.Get().IsAnyPickedTiles();
                 break;
             default:
                 break;
@@ -109,4 +102,8 @@ public class SettingsUI : MonoBehaviour
         GameManager.Get().SetUntilTimeGameType(toInteger);
     }
 
+    public void SetStartButtonActive(bool flag)
+    {
+        m_startButton.interactable = flag;
+    }
 }

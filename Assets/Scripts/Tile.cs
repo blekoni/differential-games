@@ -51,6 +51,16 @@ public class Tile : MonoBehaviour
 
     private void OnMouseEnter()
     {
+        if (GameManager.Get().GetGameStatus() != GameManager.GameStatus.NotStarted)
+        {
+            return;
+        }
+
+        if(GameManager.Get().GetGameType() != GameManager.GameType.UntilOutOfZone)
+        {
+            return;
+        }
+
         m_renderer.color = Color.blue;
     }
 

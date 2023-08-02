@@ -8,130 +8,69 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public Text timerText;
-    public Text gameResult;
-
-    [SerializeField] List<GameObject> dontDestroyUIList;
+    [SerializeField] private GameResultUI m_gameResultUI;
+    [SerializeField] private PlayerUI m_playerUI;
+    [SerializeField] private SettingsUI m_settingsUI;
 
     private void Start()
     {
-        ResetUI();
-        LoadUI();
+        HideGameResult();
     }
 
     private void Update()
     {
-        var gameStatus = GameManager.Get().GetGameStatus();
-        if (gameStatus == GameManager.GameStatus.InProgress)
-        {
-            UpdateTimer();
-        }
-        else if(gameStatus == GameManager.GameStatus.Ended)
-        {
-            UpdateGameResult();
-        }
     }
 
-    public void Awake()
+    private void Awake()
     {
-        m_instance = this;
-
-        foreach (var uiElement in dontDestroyUIList)
-        {
-            if (uiElement)
-            {
-                DontDestroyOnLoad(uiElement);
-            }
-        }
+        Debug.Assert(m_gameResultUI);
+        Debug.Assert(m_playerUI);
+        Debug.Assert(m_settingsUI);
     }
 
-    private void UpdateTimer()
+    public void UpdateTimer(float gameTime)
     {
-        TimeSpan time = TimeSpan.FromSeconds(GameManager.Get().GetCurrentGameTime());
+        TimeSpan time = TimeSpan.FromSeconds(gameTime);
         if (timerText)
         {
             timerText.text = time.ToString(@"mm\:ss\:fff");
         }
     }
 
-    private void UpdateGameResult()
+    public void ShowGameResult(GameManager.GameResult gameResult)
     {
-        if (!gameResult)
-        {
-            return;
-        }
+        m_gameResultUI.ShowResult(gameResult);
+    }
 
-        if(gameResult.text.Length != 0)
-        {
-            return;
-        }
+    public void HideGameResult()
+    {
+        m_gameResultUI.HideResult();
+    }
 
-        gameResult.gameObject.SetActive(true);
+    public void ShowPlayerUI(GameObject player)
+    {
+        m_playerUI.Show(player);
+    }
 
-        var gamRes = GameManager.Get().GetGameResult();
+    public void HidePlayerUI()
+    {
+        m_playerUI.Hide();
+    }
 
-        gameResult.text = " Game has been ";
-        if(gamRes.result == GameManager.FinishGame.AllEscapersDestroyed)
-        {
-            gameResult.text += "finished since all escapers were destroyed.\n ";
-        }
-        else if (gamRes.result == GameManager.FinishGame.EscaperOutOfZone)
-        {
-            gameResult.text += "finished since all escapers are out of game area.\n ";
-        }
-        else if(gamRes.result == GameManager.FinishGame.OutOfTime)
-        {
-            gameResult.text += "finished since no time left.\n ";
-        }
-        else if (gamRes.result == GameManager.FinishGame.StoppedByUser)
-        {
-            gameResult.text += "stopped by user.\n ";
-        }
-        gameResult.text += ("Game time is: " + timerText.text + "\n ");
-        gameResult.text += ("Distance completed by pursuer: " + gamRes.distanceCompByPursuer.ToString() + "\n ");
-        gameResult.text += ("Distance completed by escaper: " + gamRes.distanceCompByEscaper.ToString() + "\n ");
+    public void SetStartButtonActive(bool flag)
+    {
+        m_settingsUI.SetStartButtonActive(flag);
     }
 
     public void ResetUI()
     {
-        if (gameResult)
-        {
-            gameResult.gameObject.SetActive(false);
-            gameResult.text = "";
-        }
-
+        HideGameResult();
+        HidePlayerUI();
+        UpdateTimer(0.0f);
     }
 
-    private void LoadUI()
+    public void RefreshUI()
     {
-        var pursuers = GameManager.Get().GetPusuers();
-    }
-    
-    public void OnAddEscaperClicked()
-    {
-        //GameManager.Get().AddEscaper();
-    }
-
-    public void OnDropDownChanged(Dropdown dropDown)
-    {
-        switch (dropDown.value)
-        {
-            case 0:
-                SceneManager.LoadScene("MainScene");
-                break;
-            case 1:
-                SceneManager.LoadScene("Scene2");
-                break;
-            default:
-                // code block
-                break;
-        }
-        ResetUI();
-    }
-
-    private static UIManager m_instance;
-
-    public static UIManager Get()
-    {
-        return m_instance;
+        m_playerUI.RefreshUI();
     }
 }

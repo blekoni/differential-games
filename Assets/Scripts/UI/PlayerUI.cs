@@ -18,20 +18,8 @@ public class PlayerUI : MonoBehaviour
 
     Player m_player;
 
-    public static PlayerUI m_instance;
-
     private void Start()
     {
-    }
-
-    private void Awake()
-    {
-        m_instance = this;
-    }
-
-    public static PlayerUI Get()
-    {
-        return m_instance;
     }
 
     public void Show(GameObject obj)
@@ -92,6 +80,7 @@ public class PlayerUI : MonoBehaviour
                 m_dropdown.SetValueWithoutNotify(1);
             }
 
+            m_dropdown.interactable = true;
         }
         else
         {
@@ -110,6 +99,8 @@ public class PlayerUI : MonoBehaviour
             {
                 m_dropdown.SetValueWithoutNotify(2);
             }
+
+            m_dropdown.interactable = GameManager.Get().GetGameType() != GameManager.GameType.UntilOutOfZone;
         }
     }
 
@@ -290,6 +281,14 @@ public class PlayerUI : MonoBehaviour
         if (m_player != null)
         {
             m_player.SetSpeed(slider.value);
+        }
+    }
+
+    public void RefreshUI()
+    {
+        if(m_player)
+        {
+            ShowPlayerInfo(m_player);
         }
     }
 

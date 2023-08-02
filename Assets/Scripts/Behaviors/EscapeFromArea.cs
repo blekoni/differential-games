@@ -10,7 +10,7 @@ public class EscapeFromArea : Behavior
     public EscapeFromArea(Vector2 currentPos)
     {
         m_behaviorType = BehaviorType.EscapeFromArea;
-        var pickedBounds = GridManager.Get().GetPickedBounds();
+        var pickedBounds = GameManager.Get().GetPickedBounds();
         if(!pickedBounds.HasValue)
         {
             return;
