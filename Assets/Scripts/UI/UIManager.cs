@@ -68,5 +68,6 @@ public class UIManager : MonoBehaviour
     public void RefreshUI()
     {
         m_playerUI.RefreshUI();
+        m_settingsUI.RefreshUI();
     }
 }

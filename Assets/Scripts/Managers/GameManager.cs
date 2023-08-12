@@ -353,11 +353,15 @@ public class GameManager : MonoBehaviour
             {
                 if (escaper)
                 {
-                    m_gameSettings.escaperBehavior = escaper.GetBehaviorType();
+                    var oldBehaviorType = escaper.GetBehaviorType();
+                    if (oldBehaviorType != Behavior.BehaviorType.EscapeFromArea)
+                    {
+                        m_gameSettings.escaperBehavior = oldBehaviorType;
+                    }
                     escaper.SetBehavior(Behavior.BehaviorType.EscapeFromArea);
                 }    
             }
-            m_UIManager.SetStartButtonActive(m_gridManager.IsAnyPickedTiles());
+            m_UIManager.SetStartButtonActive(m_gridManager.IsAnyPickedTiles() || m_gameStatus != GameStatus.NotStarted);
             m_gridManager.SetActiveColorToGrid();
         }
 

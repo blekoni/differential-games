@@ -18,10 +18,10 @@ public class SettingsUI : MonoBehaviour
     private void Update()
     {
         var gameStatus = GameManager.Get().GetGameStatus();
-        UpdateStartButton(gameStatus);
+        UpdateStartButtonText(gameStatus);
     }
 
-    private void UpdateStartButton(GameManager.GameStatus gameStatus)
+    private void UpdateStartButtonText(GameManager.GameStatus gameStatus)
     {
         switch(gameStatus)
         {
@@ -105,5 +105,26 @@ public class SettingsUI : MonoBehaviour
     public void SetStartButtonActive(bool flag)
     {
         m_startButton.interactable = flag;
+    }
+
+    public void RefreshUI()
+    {
+        switch (GameManager.Get().GetGameType())
+        {
+            case GameManager.GameType.TypicalGame:
+                m_dropdown.SetValueWithoutNotify(0);
+                break;
+            case GameManager.GameType.UntilTime:
+                m_dropdown.SetValueWithoutNotify(1);
+                break;
+            case GameManager.GameType.UntilOutOfZone:
+                m_dropdown.SetValueWithoutNotify(2);
+                break;
+            default:
+                break;
+        }
+
+       
+        Update();
     }
 }

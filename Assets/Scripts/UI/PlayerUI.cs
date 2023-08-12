@@ -80,7 +80,7 @@ public class PlayerUI : MonoBehaviour
         }
         else
         {
-            List<string> options = new List<string> { "Simple escape", "Static direction", "Escape from area" };
+            List<string> options = new List<string> { "Simple escape", "Static direction", "Escape to safe zone" };
             m_dropdown.AddOptions(options);
 
             if (behaviorType == Behavior.BehaviorType.EscapeFromClosestPursuer)

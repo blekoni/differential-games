@@ -81,6 +81,11 @@ public class Tile : MonoBehaviour
             return;
         }
 
+        if (GameManager.Get().GetGameStatus() == GameManager.GameStatus.InProgress)
+        {
+            return;
+        }
+
         m_bIsPicked = !m_bIsPicked;
         m_renderer.color = Color.red;
         m_gridManager.AddPickedTile(this);
