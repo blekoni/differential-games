@@ -36,11 +36,11 @@ public class GameResultUI : MonoBehaviour
         string resultStr;
         resultStr = "Game has been finished \n";
         resultStr += " Reason: ";
-        if (gamRes.result == GameManager.FinishGame.AllEscapersDestroyed)
+        if (gamRes.result == GameManager.FinishGame.EscapersDestroyed)
         {
             resultStr += "all escapers were destroyed \n";
         }
-        else if (gamRes.result == GameManager.FinishGame.EscaperOutOfZone)
+        else if (gamRes.result == GameManager.FinishGame.EscapersInSafeZone)
         {
             resultStr += "all escapers reached safe zone \n";
         }
@@ -54,8 +54,8 @@ public class GameResultUI : MonoBehaviour
         }
 
         //resultStr += ("Game time is: " + timerText.text + "\n ");
-        resultStr += (" Dist. completed by pursuer: " + gamRes.distanceCompByPursuer.ToString() + "\n");
-        resultStr += (" Dist. completed by escaper: " + gamRes.distanceCompByEscaper.ToString() + "\n");
+        resultStr += (" Dist. completed by pursuer: " + gamRes.distCompByPursuer.ToString() + "\n");
+        resultStr += (" Dist. completed by escaper: " + gamRes.distCompByEscaper.ToString() + "\n");
 
         return resultStr;
     }

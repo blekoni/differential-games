@@ -91,12 +91,12 @@ public class PlayerUI : MonoBehaviour
             {
                 m_dropdown.SetValueWithoutNotify(1);
             }
-            else if (behaviorType == Behavior.BehaviorType.EscapeFromArea)
+            else if (behaviorType == Behavior.BehaviorType.EscapeToSafeZone)
             {
                 m_dropdown.SetValueWithoutNotify(2);
             }
 
-            m_dropdown.interactable = GameManager.Get().GetGameType() != GameManager.GameType.UntilOutOfZone;
+            m_dropdown.interactable = GameManager.Get().GetGameType() != GameManager.GameType.EscapeToSafeZone;
         }
     }
 
@@ -186,8 +186,8 @@ public class PlayerUI : MonoBehaviour
             }
             else if (dropDown.value == 2)
             {
-                m_player.SetBehavior(Behavior.BehaviorType.EscapeFromArea);
-                GameManager.Get().SetGameType(GameManager.GameType.UntilOutOfZone);
+                m_player.SetBehavior(Behavior.BehaviorType.EscapeToSafeZone);
+                GameManager.Get().SetGameType(GameManager.GameType.EscapeToSafeZone);
             }
         }
       

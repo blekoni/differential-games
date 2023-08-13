@@ -56,7 +56,7 @@ public class Tile : MonoBehaviour
             return;
         }
 
-        if(GameManager.Get().GetGameType() != GameManager.GameType.UntilOutOfZone)
+        if(GameManager.Get().GetGameType() != GameManager.GameType.EscapeToSafeZone)
         {
             return;
         }
@@ -71,7 +71,7 @@ public class Tile : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if(GameManager.Get().GetGameType() != GameManager.GameType.UntilOutOfZone)
+        if(GameManager.Get().GetGameType() != GameManager.GameType.EscapeToSafeZone)
         {
             return;
         }

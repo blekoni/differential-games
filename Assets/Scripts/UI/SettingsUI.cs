@@ -69,7 +69,7 @@ public class SettingsUI : MonoBehaviour
         {
             case 0:
                 m_timeInput.gameObject.active = false;
-                GameManager.Get().SetGameType(GameManager.GameType.TypicalGame);
+                GameManager.Get().SetGameType(GameManager.GameType.DefaultGame);
                 break;
             case 1:
                 m_timeInput.gameObject.active = true;
@@ -78,7 +78,7 @@ public class SettingsUI : MonoBehaviour
                 break;
             case 2:
                 m_timeInput.gameObject.active = false;
-                GameManager.Get().SetGameType(GameManager.GameType.UntilOutOfZone);
+                GameManager.Get().SetGameType(GameManager.GameType.EscapeToSafeZone);
                 break;
             default:
                 break;
@@ -111,13 +111,13 @@ public class SettingsUI : MonoBehaviour
     {
         switch (GameManager.Get().GetGameType())
         {
-            case GameManager.GameType.TypicalGame:
+            case GameManager.GameType.DefaultGame:
                 m_dropdown.SetValueWithoutNotify(0);
                 break;
             case GameManager.GameType.UntilTime:
                 m_dropdown.SetValueWithoutNotify(1);
                 break;
-            case GameManager.GameType.UntilOutOfZone:
+            case GameManager.GameType.EscapeToSafeZone:
                 m_dropdown.SetValueWithoutNotify(2);
                 break;
             default:

@@ -21,8 +21,8 @@ public class GameManager : MonoBehaviour
 
     public enum FinishGame
     {
-        AllEscapersDestroyed,
-        EscaperOutOfZone,
+        EscapersDestroyed,
+        EscapersInSafeZone,
         OutOfTime,
         StoppedByUser
     }
@@ -30,15 +30,15 @@ public class GameManager : MonoBehaviour
     public struct GameResult
     {
         public FinishGame result;
-        public float distanceCompByPursuer;
-        public float distanceCompByEscaper;
+        public float distCompByPursuer;
+        public float distCompByEscaper;
     }
 
     public enum GameType
     {
-        TypicalGame,
+        DefaultGame,
         UntilTime,
-        UntilOutOfZone
+        EscapeToSafeZone
     }
 
     public struct GameSettings
@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_gameSettings.gameType = GameType.TypicalGame;
+        m_gameSettings.gameType = GameType.DefaultGame;
         m_gameSettings.gameTimeBoundaries = 10;
         m_gameSettings.escaperBehavior = Behavior.BehaviorType.EscapeFromClosestPursuer;
     }
@@ -119,7 +119,7 @@ public class GameManager : MonoBehaviour
         if(m_gameStatus == GameStatus.InProgress && 
             IsGameEnded())
         {
-            StopGame(FinishGame.AllEscapersDestroyed);
+            StopGame(FinishGame.EscapersDestroyed);
         }
         else if(m_gameStatus == GameStatus.Ended)
         {
@@ -214,8 +214,8 @@ public class GameManager : MonoBehaviour
     {
         GameResult gameRes = new GameResult();
         gameRes.result = finishGame;
-        gameRes.distanceCompByPursuer = m_pursuers[0].GetTravelDistance();
-        gameRes.distanceCompByEscaper = m_escapers[0].GetTravelDistance();
+        gameRes.distCompByPursuer = m_pursuers[0].GetTravelDistance();
+        gameRes.distCompByEscaper = m_escapers[0].GetTravelDistance();
         return gameRes;
     }
 
@@ -301,12 +301,12 @@ public class GameManager : MonoBehaviour
                 return true;
             }
         }
-        else if(m_gameSettings.gameType == GameType.UntilOutOfZone)
+        else if(m_gameSettings.gameType == GameType.EscapeToSafeZone)
         {
             var gridBounds = m_gridManager.GetPickedBounds();
             if(!gridBounds.HasValue)
             {
-                StopGame(FinishGame.EscaperOutOfZone);
+                StopGame(FinishGame.EscapersInSafeZone);
                 return false;
             }
 
@@ -322,7 +322,7 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            StopGame(FinishGame.EscaperOutOfZone);
+            StopGame(FinishGame.EscapersInSafeZone);
             return true;
         }
 
@@ -333,7 +333,7 @@ public class GameManager : MonoBehaviour
     public void SetGameType(GameType gameType)
     {
         m_gameSettings.gameType = gameType;
-        if (gameType == GameType.TypicalGame)
+        if (gameType == GameType.DefaultGame)
         {
             SetAllEscapersBeahvior(m_gameSettings.escaperBehavior);
             m_gridManager.SetDefaultColorToGrid();
@@ -354,11 +354,11 @@ public class GameManager : MonoBehaviour
                 if (escaper)
                 {
                     var oldBehaviorType = escaper.GetBehaviorType();
-                    if (oldBehaviorType != Behavior.BehaviorType.EscapeFromArea)
+                    if (oldBehaviorType != Behavior.BehaviorType.EscapeToSafeZone)
                     {
                         m_gameSettings.escaperBehavior = oldBehaviorType;
                     }
-                    escaper.SetBehavior(Behavior.BehaviorType.EscapeFromArea);
+                    escaper.SetBehavior(Behavior.BehaviorType.EscapeToSafeZone);
                 }    
             }
             m_UIManager.SetStartButtonActive(m_gridManager.IsAnyPickedTiles() || m_gameStatus != GameStatus.NotStarted);
