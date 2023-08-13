@@ -42,7 +42,7 @@ public class GameResultUI : MonoBehaviour
         }
         else if (gamRes.result == GameManager.FinishGame.EscaperOutOfZone)
         {
-            resultStr += "all escapers are in escape zonev \n";
+            resultStr += "all escapers reached safe zone \n";
         }
         else if (gamRes.result == GameManager.FinishGame.OutOfTime)
         {
