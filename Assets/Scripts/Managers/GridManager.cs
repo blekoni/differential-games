@@ -71,6 +71,14 @@ public class GridManager : MonoBehaviour
         GameManager.Get().GetUIManager().SetStartButtonActive(true);
     }
 
+    public void RemovedPickedTile(Tile tile)
+    {
+        m_pickedTiles.Remove(tile);
+        tile.DeSelect();
+        GameManager.Get().GetUIManager().RefreshUI();
+        GameManager.Get().GetUIManager().SetStartButtonActive(m_pickedTiles.Count != 0);
+    }
+
     private bool PickShouldBeReset(Vector2 newTilePosition)
     {
         foreach(var tile in m_pickedTiles)

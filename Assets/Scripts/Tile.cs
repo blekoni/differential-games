@@ -87,8 +87,15 @@ public class Tile : MonoBehaviour
         }
 
         m_bIsPicked = !m_bIsPicked;
-        m_renderer.color = Color.red;
-        m_gridManager.AddPickedTile(this);
+
+        if (m_bIsPicked)
+        {
+            m_gridManager.AddPickedTile(this);
+        }
+        else
+        {
+            m_gridManager.RemovedPickedTile(this);
+        }
     }
 
     private Color DefaultColor()
