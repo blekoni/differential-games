@@ -210,7 +210,7 @@ public class Player : MonoBehaviour
     public float GetTravelDistance()
     {
         float distance = 0.0f;
-        for (var i = 1; i <= m_path.Count; ++i)
+        for (var i = 1; i <= m_path.Count - 1; ++i)
         {
             var p1 = m_path[i - 1];
             var p2 = m_path[i % m_path.Count];
