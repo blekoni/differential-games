@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 
 public class GameManager : MonoBehaviour
@@ -155,6 +156,16 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        if(m_gameSettings.gameType == GameType.EscapeToSafeZone
+            && !m_gridManager.IsAnyPickedTiles())
+        {
+            EditorUtility.DisplayDialog("Warning",
+                                       "At least one cell should be picked for the current game type!", "Ok");
+
+            m_UIManager.SetStartButtonActive(false);
+            return;
+        }
+
         m_UIManager.HideGameResult();
         m_mouseManager.ClearSelection();
         m_activeGameDuration = 0.0f;
@@ -361,7 +372,7 @@ public class GameManager : MonoBehaviour
                     escaper.SetBehavior(Behavior.BehaviorType.EscapeToSafeZone);
                 }    
             }
-            m_UIManager.SetStartButtonActive(m_gridManager.IsAnyPickedTiles() || m_gameStatus != GameStatus.NotStarted);
+            //m_UIManager.SetStartButtonActive(m_gridManager.IsAnyPickedTiles() || m_gameStatus != GameStatus.NotStarted);
             m_gridManager.SetActiveColorToGrid();
         }
 
