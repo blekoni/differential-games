@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MouseManager m_mouseManager;
     [SerializeField] private CameraManager m_cameraManager;
     [SerializeField] private GridManager m_gridManager;
+    [SerializeField] private LineRendererManager m_lineRendererManager;
 
 
     private void Awake()
@@ -73,6 +74,7 @@ public class GameManager : MonoBehaviour
         Debug.Assert(m_mouseManager);
         Debug.Assert(m_cameraManager);
         Debug.Assert(m_gridManager);
+        Debug.Assert(m_lineRendererManager);
 
         var pursuers = GameObject.FindGameObjectsWithTag("Pursuer");
         foreach (var pursuer in pursuers)
@@ -124,21 +126,21 @@ public class GameManager : MonoBehaviour
         }
         else if(m_gameStatus == GameStatus.Ended)
         {
-            foreach (Escaper escaper in m_escapers)
-            {
-                if (escaper)
-                {
-                    escaper.ShowPath(Color.blue);
-                }
-            }
+            //foreach (Escaper escaper in m_escapers)
+            //{
+            //    if (escaper)
+            //    {
+            //        escaper.ShowPath(Color.blue);
+            //    }
+            //}
 
-            foreach (Pursuer pursuer in m_pursuers)
-            {
-                if (pursuer)
-                {
-                    pursuer.ShowPath(Color.red);
-                }
-            }
+            //foreach (Pursuer pursuer in m_pursuers)
+            //{
+            //    if (pursuer)
+            //    {
+            //        pursuer.ShowPath(Color.red);
+            //    }
+            //}
         }
 
         if(m_gameStatus == GameStatus.InProgress)
@@ -194,12 +196,27 @@ public class GameManager : MonoBehaviour
         m_gameResult = CreateGameResult(finishGame);
         m_UIManager.ShowGameResult(m_gameResult);
         m_gameStatus = GameStatus.Ended;
+        foreach (Escaper escaper in m_escapers)
+        {
+            if (escaper)
+            {
+                escaper.ShowPath(m_lineRendererManager, Color.blue);
+            }
+        }
+
+        foreach (Pursuer pursuer in m_pursuers)
+        {
+            if (pursuer)
+            {
+                pursuer.ShowPath(m_lineRendererManager, Color.red);
+            }
+        }
     }
 
     public void ResetGame()
     {
         MakeAllAlive();
-        DebugUtil.Clean();
+        m_lineRendererManager.Clear();
         m_UIManager.ResetUI();
 
         m_gameStatus = GameStatus.NotStarted;
@@ -304,7 +321,7 @@ public class GameManager : MonoBehaviour
 
     private bool IsGameFinished()
     {
-        if(m_gameSettings.gameType == GameType.UntilTime)
+        if (m_gameSettings.gameType == GameType.UntilTime)
         {
             TimeSpan time = TimeSpan.FromSeconds(m_activeGameDuration);
             if (time.Seconds >= m_gameSettings.gameTimeBoundaries)
@@ -350,14 +367,14 @@ public class GameManager : MonoBehaviour
             SetAllEscapersBeahvior(m_gameSettings.escaperBehavior);
             m_gridManager.SetDefaultColorToGrid();
             m_UIManager.SetStartButtonActive(true);
-            DebugUtil.Clean();
+            m_lineRendererManager.Clear();
         }
         else if (gameType == GameType.UntilTime)
         {
             SetAllEscapersBeahvior(m_gameSettings.escaperBehavior);
             m_gridManager.SetDefaultColorToGrid();
             m_UIManager.SetStartButtonActive(true);
-            DebugUtil.Clean();
+            m_lineRendererManager.Clear();
         }
         else 
         {

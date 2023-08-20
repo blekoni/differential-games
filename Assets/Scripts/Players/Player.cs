@@ -188,21 +188,22 @@ public class Player : MonoBehaviour
         m_path.Add(position);
     }
 
-    public void ShowPath(Color color)
+    public void ShowPath(LineRendererManager lrManager, Color color)
     {
-        Vector2 prevPos = new Vector2(0.0f, 0.0f);
-        bool isFirst = true;
-        foreach(var pos in m_path)
-        {
-            if (isFirst)
-            {
-                prevPos = pos;
-                isFirst = false;
-                continue;
-            }
-            DebugUtil.DrawLine(prevPos, pos, color, 0.1f);
-            prevPos = pos;
-        }
+        lrManager.DrawLine(m_path, color);
+        //Vector2 prevPos = new Vector2(0.0f, 0.0f);
+        //bool isFirst = true;
+        //foreach(var pos in m_path)
+        //{
+        //    if (isFirst)
+        //    {
+        //        prevPos = pos;
+        //        isFirst = false;
+        //        continue;
+        //    }
+        //    DebugUtil.DrawLine(prevPos, pos, color, 0.1f);
+        //    prevPos = pos;
+        //}
 
         m_path.Clear();
     }
