@@ -18,10 +18,10 @@ public class SettingsUI : MonoBehaviour
     private void Update()
     {
         var gameStatus = GameManager.Get().GetGameStatus();
-        UpdateStartButton(gameStatus);
+        UpdateStartButtonText(gameStatus);
     }
 
-    private void UpdateStartButton(GameManager.GameStatus gameStatus)
+    private void UpdateStartButtonText(GameManager.GameStatus gameStatus)
     {
         switch(gameStatus)
         {
@@ -69,7 +69,7 @@ public class SettingsUI : MonoBehaviour
         {
             case 0:
                 m_timeInput.gameObject.active = false;
-                GameManager.Get().SetGameType(GameManager.GameType.TypicalGame);
+                GameManager.Get().SetGameType(GameManager.GameType.DefaultGame);
                 break;
             case 1:
                 m_timeInput.gameObject.active = true;
@@ -78,7 +78,7 @@ public class SettingsUI : MonoBehaviour
                 break;
             case 2:
                 m_timeInput.gameObject.active = false;
-                GameManager.Get().SetGameType(GameManager.GameType.UntilOutOfZone);
+                GameManager.Get().SetGameType(GameManager.GameType.EscapeToSafeZone);
                 break;
             default:
                 break;
@@ -105,5 +105,26 @@ public class SettingsUI : MonoBehaviour
     public void SetStartButtonActive(bool flag)
     {
         m_startButton.interactable = flag;
+    }
+
+    public void RefreshUI()
+    {
+        switch (GameManager.Get().GetGameType())
+        {
+            case GameManager.GameType.DefaultGame:
+                m_dropdown.SetValueWithoutNotify(0);
+                break;
+            case GameManager.GameType.UntilTime:
+                m_dropdown.SetValueWithoutNotify(1);
+                break;
+            case GameManager.GameType.EscapeToSafeZone:
+                m_dropdown.SetValueWithoutNotify(2);
+                break;
+            default:
+                break;
+        }
+
+       
+        Update();
     }
 }

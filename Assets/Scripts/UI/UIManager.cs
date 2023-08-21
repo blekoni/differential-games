@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    public Text timerText;
+    [SerializeField] private TimerUI m_timerUI;
     [SerializeField] private GameResultUI m_gameResultUI;
     [SerializeField] private PlayerUI m_playerUI;
     [SerializeField] private SettingsUI m_settingsUI;
@@ -17,24 +17,17 @@ public class UIManager : MonoBehaviour
         HideGameResult();
     }
 
-    private void Update()
-    {
-    }
-
     private void Awake()
     {
         Debug.Assert(m_gameResultUI);
         Debug.Assert(m_playerUI);
         Debug.Assert(m_settingsUI);
+        Debug.Assert(m_timerUI);
     }
 
     public void UpdateTimer(float gameTime)
     {
-        TimeSpan time = TimeSpan.FromSeconds(gameTime);
-        if (timerText)
-        {
-            timerText.text = time.ToString(@"mm\:ss\:fff");
-        }
+        m_timerUI.UpdateTimer(gameTime);
     }
 
     public void ShowGameResult(GameManager.GameResult gameResult)
@@ -72,5 +65,6 @@ public class UIManager : MonoBehaviour
     public void RefreshUI()
     {
         m_playerUI.RefreshUI();
+        m_settingsUI.RefreshUI();
     }
 }

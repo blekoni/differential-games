@@ -11,7 +11,7 @@ public abstract class Behavior
         ParallelPursuit,
         EscapeFromClosestPursuer,
         EscapeInStaticDirection,
-        EscapeFromArea
+        EscapeToSafeZone
     }
 
     protected BehaviorType m_behaviorType = BehaviorType.Unknown;

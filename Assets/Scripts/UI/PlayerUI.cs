@@ -11,16 +11,12 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] Slider m_slider;
     [SerializeField] Dropdown m_dropdown;
     [SerializeField] Text m_playerName;
-
+    
     [SerializeField] Text m_additionalText;
     [SerializeField] InputField m_additionalInputX;
     [SerializeField] InputField m_additionalInputY;
 
     Player m_player;
-
-    private void Start()
-    {
-    }
 
     public void Show(GameObject obj)
     {
@@ -84,7 +80,7 @@ public class PlayerUI : MonoBehaviour
         }
         else
         {
-            List<string> options = new List<string> { "Simple escape", "Static direction", "Escape from area" };
+            List<string> options = new List<string> { "Simple escape", "Static direction", "Escape to safe zone" };
             m_dropdown.AddOptions(options);
 
             if (behaviorType == Behavior.BehaviorType.EscapeFromClosestPursuer)
@@ -95,12 +91,12 @@ public class PlayerUI : MonoBehaviour
             {
                 m_dropdown.SetValueWithoutNotify(1);
             }
-            else if (behaviorType == Behavior.BehaviorType.EscapeFromArea)
+            else if (behaviorType == Behavior.BehaviorType.EscapeToSafeZone)
             {
                 m_dropdown.SetValueWithoutNotify(2);
             }
 
-            m_dropdown.interactable = GameManager.Get().GetGameType() != GameManager.GameType.UntilOutOfZone;
+            m_dropdown.interactable = GameManager.Get().GetGameType() != GameManager.GameType.EscapeToSafeZone;
         }
     }
 
@@ -114,6 +110,7 @@ public class PlayerUI : MonoBehaviour
         m_additionalText.text = "";
         m_additionalInputX.gameObject.active = false;
         m_additionalInputY.gameObject.active = false;
+        ResizeUI(false);
 
         if (player.CompareTag("Escaper"))
         {
@@ -130,6 +127,8 @@ public class PlayerUI : MonoBehaviour
                     m_additionalInputX.text = dir.x.ToString();
                     m_additionalInputY.text = dir.y.ToString();
                 }
+
+                ResizeUI(true);
             }
         }
     }
@@ -178,20 +177,19 @@ public class PlayerUI : MonoBehaviour
             if (dropDown.value == 0)
             {
                 m_player.SetBehavior(Behavior.BehaviorType.EscapeFromClosestPursuer);
-                GameManager.Get().SetGameType(GameManager.GameType.UntilTime);
+                //GameManager.Get().SetGameType(GameManager.GameType.UntilTime);
             }
             else if (dropDown.value == 1)
             {
                 m_player.SetBehavior(Behavior.BehaviorType.EscapeInStaticDirection);
-                GameManager.Get().SetGameType(GameManager.GameType.UntilTime);
+                //GameManager.Get().SetGameType(GameManager.GameType.UntilTime);
             }
             else if (dropDown.value == 2)
             {
-                m_player.SetBehavior(Behavior.BehaviorType.EscapeFromArea);
-                GameManager.Get().SetGameType(GameManager.GameType.UntilOutOfZone);
+                m_player.SetBehavior(Behavior.BehaviorType.EscapeToSafeZone);
+                GameManager.Get().SetGameType(GameManager.GameType.EscapeToSafeZone);
             }
         }
-
       
         UpdateAdditional(m_player);
     }
@@ -289,6 +287,28 @@ public class PlayerUI : MonoBehaviour
         if(m_player)
         {
             ShowPlayerInfo(m_player);
+        }
+    }
+
+    private void ResizeUI(bool showAdditionalUI)
+    {
+        if(showAdditionalUI)
+        {
+            var rectTransform = GetComponent<RectTransform>();
+            if (rectTransform)
+            {
+                GetComponent<RectTransform>().sizeDelta = new Vector2(400.0f, 250.0f);
+                GetComponent<RectTransform>().anchoredPosition = new Vector3(-250.0f, -220.0f, 0.0f);
+            }
+        }
+        else
+        {
+            var rectTransform = GetComponent<RectTransform>();
+            if (rectTransform)
+            {
+                GetComponent<RectTransform>().sizeDelta = new Vector2(400.0f, 210.0f);
+                GetComponent<RectTransform>().anchoredPosition = new Vector3(-250.0f, -200.0f, 0.0f);
+            }
         }
     }
 

@@ -9,7 +9,7 @@ public class EscapeFromArea : Behavior
 
     public EscapeFromArea(Vector2 currentPos)
     {
-        m_behaviorType = BehaviorType.EscapeFromArea;
+        m_behaviorType = BehaviorType.EscapeToSafeZone;
         var pickedBounds = GameManager.Get().GetPickedBounds();
         if(!pickedBounds.HasValue)
         {

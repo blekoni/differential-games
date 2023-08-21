@@ -54,7 +54,7 @@ public class Escaper : Player
         {
             m_behaviorHelper = new EscapeFromClosestPursuer();
         }
-        else if (behaviorType == Behavior.BehaviorType.EscapeFromArea)
+        else if (behaviorType == Behavior.BehaviorType.EscapeToSafeZone)
         {
             m_behaviorHelper = new EscapeFromArea(MathUtil.Vec3ToVec2(transform.position));
         }
@@ -66,7 +66,7 @@ public class Escaper : Player
 
     public void OnGameStart()
     {
-        if (m_behaviorHelper.GetBehaviorType() == Behavior.BehaviorType.EscapeFromArea)
+        if (m_behaviorHelper.GetBehaviorType() == Behavior.BehaviorType.EscapeToSafeZone)
         {
             m_behaviorHelper = new EscapeFromArea(MathUtil.Vec3ToVec2(transform.position));
         }

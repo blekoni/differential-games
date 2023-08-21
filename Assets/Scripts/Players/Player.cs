@@ -188,21 +188,22 @@ public class Player : MonoBehaviour
         m_path.Add(position);
     }
 
-    public void ShowPath(Color color)
+    public void ShowPath(LineRendererManager lrManager, Color color)
     {
-        Vector2 prevPos = new Vector2(0.0f, 0.0f);
-        bool isFirst = true;
-        foreach(var pos in m_path)
-        {
-            if (isFirst)
-            {
-                prevPos = pos;
-                isFirst = false;
-                continue;
-            }
-            DebugUtil.DrawLine(prevPos, pos, color, 0.1f);
-            prevPos = pos;
-        }
+        lrManager.DrawLine(m_path, color);
+        //Vector2 prevPos = new Vector2(0.0f, 0.0f);
+        //bool isFirst = true;
+        //foreach(var pos in m_path)
+        //{
+        //    if (isFirst)
+        //    {
+        //        prevPos = pos;
+        //        isFirst = false;
+        //        continue;
+        //    }
+        //    DebugUtil.DrawLine(prevPos, pos, color, 0.1f);
+        //    prevPos = pos;
+        //}
 
         m_path.Clear();
     }
@@ -210,7 +211,7 @@ public class Player : MonoBehaviour
     public float GetTravelDistance()
     {
         float distance = 0.0f;
-        for (var i = 1; i <= m_path.Count; ++i)
+        for (var i = 1; i <= m_path.Count - 1; ++i)
         {
             var p1 = m_path[i - 1];
             var p2 = m_path[i % m_path.Count];
