@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    [SerializeField] List<GameObject> m_cameras = new List<GameObject>();
+    [SerializeField] List<Camera> m_cameras = new List<Camera>();
 
     int m_activeCamera = 0;
     float m_cameraSpeed = 10.0f;
@@ -141,7 +141,7 @@ public class CameraManager : MonoBehaviour
         activeCamera.transform.position += moveDir * m_cameraSpeed * Time.deltaTime;
     }
 
-    GameObject GetActiveCamera()
+    public Camera GetActiveCamera()
     {
         if(m_activeCamera >= m_cameras.Capacity)
         {
@@ -158,10 +158,21 @@ public class CameraManager : MonoBehaviour
             var camera = m_cameras[i];
             if (camera != null)
             {
-                camera.SetActive(i == index);
+                camera.gameObject.SetActive(i == index);
             }
         }
 
         m_activeCamera = index;
+    }
+
+    public Vector3 GetPosition()
+    {
+        var activeCamera = GetActiveCamera();
+        if(activeCamera)
+        {
+            return activeCamera.transform.position;
+        }
+
+        return new Vector3();
     }
 }

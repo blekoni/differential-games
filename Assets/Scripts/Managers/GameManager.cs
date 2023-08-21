@@ -423,6 +423,11 @@ public class GameManager : MonoBehaviour
         return m_UIManager;
     }
 
+    public CameraManager GetCameraManager()
+    {
+        return m_cameraManager;
+    }
+
     private void SetAllEscapersBeahvior(Behavior.BehaviorType type)
     {
         foreach (var escaper in m_escapers)
