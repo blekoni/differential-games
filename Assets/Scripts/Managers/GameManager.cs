@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 
 
 public class GameManager : MonoBehaviour
@@ -161,9 +161,9 @@ public class GameManager : MonoBehaviour
         if(m_gameSettings.gameType == GameType.EscapeToSafeZone
             && !m_gridManager.IsAnyPickedTiles())
         {
-            EditorUtility.DisplayDialog("Warning"
-                                       ,"At least one cell should be picked for the current game type!"
-                                       ,"OK");
+            //EditorUtility.DisplayDialog("Warning"
+            //                           ,"At least one cell should be picked for the current game type!"
+            //                           ,"OK");
 
             m_UIManager.SetStartButtonActive(false);
             return;
